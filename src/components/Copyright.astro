@@ -1,16 +1,53 @@
 ---
 import { site } from '../config/site';
-const { copyright = site.copyright } = Astro.props;
+const { authors, years, builtWith } = site.footer;
 ---
 
-<p class="copyright">{copyright}</p>
+<div class="site-footer">
+  <p class="copyright">
+    © {years}{' '}
+    {
+      authors.map((a, i) => (
+        <>
+          {i > 0 ? ' & ' : ''}
+          <a href={a.url} target="_blank" rel="noopener noreferrer">
+            {a.name}
+          </a>
+        </>
+      ))
+    }
+  </p>
+  <p class="credit">
+    <a href={builtWith.url} target="_blank" rel="noopener noreferrer">{builtWith.label}</a>로 다시 만들었습니다
+  </p>
+</div>
 
 <style lang="scss">
   @import '../styles/variables';
 
+  .site-footer {
+    text-align: center;
+  }
+
   .copyright {
     color: lighten($color-gray, 18%);
     font-size: $typographic-small-font-size;
-    text-align: center;
+  }
+
+  .credit {
+    margin-top: 4px;
+    color: lighten($color-gray, 30%);
+    font-size: $typographic-small-font-size;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.15s ease;
+  }
+
+  a:hover {
+    border-bottom-color: currentColor;
   }
 </style>

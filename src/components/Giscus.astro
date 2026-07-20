@@ -4,6 +4,7 @@
 ---
 
 <section class="comments">
+  <p class="comments-note">댓글은 GitHub 계정으로 남길 수 있어요.</p>
   <script
     src="https://giscus.app/client.js"
     data-repo="ybbarng/livvy.byb.kr"
@@ -30,5 +31,11 @@
     max-width: $layout-post-single-width;
     margin: 0 auto;
     @include margin-top(1);
+  }
+
+  .comments-note {
+    color: lighten($color-gray, 25%);
+    font-size: $typographic-small-font-size;
+    margin-bottom: 10px;
   }
 </style>

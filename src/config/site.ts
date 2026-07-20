@@ -18,11 +18,28 @@ export interface Category {
   name: string;
 }
 
+// 저작권 연도는 빌드 시점 기준으로 자동 계산한다(매년 직접 고칠 필요 없음).
+// 새해가 지나면 다음 배포 때 자동으로 끝 연도가 바뀐다.
+const COPYRIGHT_START_YEAR = 2017;
+const currentYear = new Date().getFullYear();
+const copyrightYears =
+  currentYear > COPYRIGHT_START_YEAR ? `${COPYRIGHT_START_YEAR}–${currentYear}` : `${COPYRIGHT_START_YEAR}`;
+
 export const site = {
   url: 'https://livvy.byb.kr',
   title: '현지와 용배의 블로그',
   subtitle: '현지와 용배가 만들어가는 블로그입니다.',
-  copyright: '© 2017-2026 livvy & ybbarng All rights reserved.',
+  copyright: `© ${copyrightYears} livvy & ybbarng`, // 플레인 텍스트(RSS 등에서 쓸 수 있게)
+  footer: {
+    years: copyrightYears,
+    // 이름을 누르면 각자의 GitHub 프로필로 이동한다.
+    authors: [
+      { name: 'livvy', url: 'https://github.com/livvykim' },
+      { name: 'ybbarng', url: 'https://github.com/ybbarng' },
+    ],
+    // 이 블로그를 다시 만든 도구
+    builtWith: { label: 'Claude Code', url: 'https://claude.com/claude-code' },
+  },
   group: {
     name: '현지 & 용배',
   },
