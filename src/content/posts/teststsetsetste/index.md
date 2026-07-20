@@ -7,7 +7,7 @@ category: smalltalk
 tags:
   - asdf
 description: asdf
-draft: true
+draft: false
 ---
 
 asdfasdf
