@@ -2,6 +2,31 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import pxtorem from 'postcss-pxtorem';
 
+// 폰트 로딩 시 밀림(FOUT)·스크롤 위치 튐 방지:
+// 본문 웹폰트(Noto/Roboto Variable)를 font-display: optional 로 바꾼다.
+// → 폰트가 아주 빨리 준비되지 않으면 그 페이지에선 스왑하지 않고 시스템 폰트로 유지 →
+//   레이아웃이 로딩 중 바뀌지 않는다. 재방문(캐시)에선 Noto 가 처음부터 적용된다.
+// 아이콘 폰트(fontello)는 건드리면 아이콘이 안 보일 수 있어, 'Variable' 폰트만 대상으로 한다.
+const forceOptionalFontDisplay = () => ({
+  postcssPlugin: 'force-optional-font-display',
+  AtRule: {
+    'font-face': (rule) => {
+      let family = '';
+      rule.walkDecls('font-family', (d) => {
+        family = d.value;
+      });
+      if (!/Variable/i.test(family)) return;
+      let found = false;
+      rule.walkDecls('font-display', (d) => {
+        d.value = 'optional';
+        found = true;
+      });
+      if (!found) rule.append({ prop: 'font-display', value: 'optional' });
+    },
+  },
+});
+forceOptionalFontDisplay.postcss = true;
+
 // 기존 Gatsby 사이트와 동일한 URL 규칙을 유지한다.
 // - trailingSlash: 'always' + build.format: 'directory' → /posts/foo/ 형태 그대로
 // - postcss-pxtorem: 기존 postcss-config.js 설정을 그대로 옮겨 px→rem 변환을 재현
@@ -28,6 +53,7 @@ export default defineConfig({
     css: {
       postcss: {
         plugins: [
+          forceOptionalFontDisplay(),
           pxtorem({
             rootValue: 16,
             unitPrecision: 5,
