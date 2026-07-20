@@ -41,6 +41,14 @@ const ogImageUrl = new URL(ogImage.src, Astro.site).href;
     <meta property="og:image:height" content="800" />
     <meta property="og:locale" content="ko_KR" />
     <link rel="alternate" type="application/rss+xml" title={site.title} href="/rss.xml" />
+    <script is:inline>
+      // 옛 Gatsby(gatsby-plugin-offline) Service Worker 잔재 제거.
+      // 남아 있으면 페이지 이동을 가로채 존재하지 않는 page-data.json 을 요청해 화면이 깨진다.
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then((rs) => rs.forEach((r) => r.unregister()));
+        if (window.caches) caches.keys().then((keys) => keys.forEach((k) => caches.delete(k)));
+      }
+    </script>
   </head>
   <body>
     <div class="page">
