@@ -162,35 +162,61 @@
           }
         }
 
+        function finish(conclusion) {
+          if (conclusion === 'success') {
+            render(CHECK, '게시 완료! 곧 반영돼요', '#059669', { pop: true, autoHide: 9000 });
+          } else {
+            render(CROSS, '게시 실패 — 확인이 필요해요', '#dc2626', { autoHide: 12000 });
+          }
+        }
+
+        // expectNew=true: 방금 저장 → 새 워크플로 run 을 기다린다.
+        // expectNew=false: 진입 시 체크 → 이미 진행 중인 run 이 있으면 그걸 추적한다.
         let polling = false;
-        async function pollDeploy() {
+        async function watch(expectNew) {
           if (polling) return;
           polling = true;
-          render(SPIN, '저장됨 — 게시 준비 중…', '#475569');
-          const baseline = await latestRun();
-          const baseId = baseline ? baseline.id : null;
+          const base = await latestRun();
+          const baseId = base ? base.id : null;
+          if (expectNew) {
+            render(SPIN, '저장됨 — 게시 준비 중…', '#475569');
+          } else if (!base || base.status === 'completed') {
+            polling = false;
+            return; // 진입 시 진행 중인 배포 없음 → 조용히 종료
+          } else {
+            render(SPIN, '게시 중… 빌드하고 있어요', '#475569');
+          }
+          let targetId = expectNew ? null : baseId;
           const started = Date.now();
           while (Date.now() - started < 6 * 60 * 1000) {
             await sleep(12000);
             const run = await latestRun();
-            if (run && run.id !== baseId) {
-              if (run.status !== 'completed') {
+            if (!run) continue;
+            if (targetId === null) {
+              if (run.id !== baseId) {
+                targetId = run.id;
                 render(SPIN, '게시 중… 빌드하고 있어요', '#475569');
-              } else if (run.conclusion === 'success') {
-                render(CHECK, '게시 완료! 곧 반영돼요', '#059669', { pop: true, autoHide: 9000 });
-                polling = false;
-                return;
-              } else {
-                render(CROSS, '게시 실패 — 확인이 필요해요', '#dc2626', { autoHide: 12000 });
+              }
+              continue;
+            }
+            if (run.id === targetId) {
+              if (run.status === 'completed') {
+                finish(run.conclusion);
                 polling = false;
                 return;
               }
+            } else if (run.status !== 'completed') {
+              targetId = run.id; // 더 새 run 이 시작되면 그걸 추적
             }
           }
           hide();
           polling = false;
         }
 
+        // 진입 시 이미 빌드 중인지 한 번 확인(Sveltia 로드 뒤)
+        setTimeout(() => watch(false), 3500);
+
+        // 저장(Save) 클릭 감지 → 새 배포 추적
         document.addEventListener(
           'click',
           (e) => {
@@ -198,7 +224,7 @@
             if (!btn) return;
             const label = (btn.textContent || '') + ' ' + (btn.getAttribute('aria-label') || '');
             if (/\bsave\b|저장|publish|발행/i.test(label)) {
-              setTimeout(pollDeploy, 4000);
+              setTimeout(() => watch(true), 4000);
             }
           },
           true,
