@@ -25,7 +25,10 @@
 
 - 에디터에서 **드래그앤드롭·붙여넣기**로 이미지 첨부 → 자동으로 저장소에 커밋 + 마크다운에 삽입
 - 미디어 라이브러리로 기존 이미지 재사용
-- → Task 7(Sveltia)에서 미디어 폴더 설정과 함께 구성
+
+**현재 상태**: 이미지를 `public/uploads/`에 저장하고 절대경로(`/uploads/파일명`)로 참조. 동작은 확실하지만 `astro:assets` 최적화(webp 변환·리사이즈)는 적용되지 않고 원본이 그대로 서빙됨.
+
+**개선 예정**: 글 폴더에 이미지를 함께 저장(entry-relative)해 `astro:assets` 최적화를 받게 하기. Sveltia의 `media_folder` entry-relative 동작이 기대와 달라(루트에 저장됨) 추가 조사가 필요. 이미지가 많아지면 Cloudflare R2/Images로 분리하는 것도 대안.
 
 ## 폰트
 

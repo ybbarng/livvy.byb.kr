@@ -23,8 +23,8 @@ collections:
     description: 블로그 글
     folder: src/content/posts
     path: '{{fields.slug}}/index' # src/content/posts/{slug}/index.md
-    media_folder: '' # 엔트리(글)와 같은 폴더에 이미지 저장 → astro:assets 최적화
-    public_folder: ''
+    media_folder: public/uploads # 이미지는 public/uploads 에 저장
+    public_folder: /uploads # 마크다운엔 /uploads/파일명 으로 삽입
     create: true
     slug: '{{fields.slug}}'
     identifier_field: title
@@ -42,8 +42,9 @@ collections:
           name: date,
           label: 게시일,
           widget: datetime,
+          # 현지 시각 + offset 포함 저장(예: 2026-07-20T23:01+09:00). 기존 글 형식과 일치.
+          format: 'YYYY-MM-DDTHH:mmZ',
           input_timezone: local, # 작성하는 곳의 시간대로 입력
-          output_utc: false, # UTC로 바꾸지 않고 현지 시각(offset) 그대로 저장
           default: '{{now}}',
         }
       - {
@@ -74,9 +75,9 @@ collections:
         }
       - {
           name: draft,
-          label: '초안 (체크하면 사이트에 안 보임)',
+          label: '초안 (체크를 해제하면 사이트에 발행됩니다)',
           widget: boolean,
-          default: false,
+          default: true, # 새 글은 기본적으로 초안 상태로 시작(실수 발행 방지)
         }
       - {
           name: body,
@@ -91,8 +92,8 @@ collections:
     description: about 같은 정적 페이지
     folder: src/content/pages
     path: '{{fields.slug}}/index'
-    media_folder: ''
-    public_folder: ''
+    media_folder: public/uploads
+    public_folder: /uploads
     create: true
     slug: '{{fields.slug}}'
     identifier_field: title
@@ -103,8 +104,8 @@ collections:
           name: date,
           label: 게시일,
           widget: datetime,
+          format: 'YYYY-MM-DDTHH:mmZ',
           input_timezone: local,
-          output_utc: false,
           required: false,
         }
       - { name: description, label: 요약, widget: text, required: false }
