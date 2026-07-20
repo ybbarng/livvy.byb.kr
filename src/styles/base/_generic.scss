@@ -76,6 +76,7 @@ h6 {
 img {
     border: 0;
     max-width: 100%;
+    height: auto; // 폭이 줄어들 때 높이도 비율대로 — 원본 가로세로비 유지
     display: block;
     margin: inherit auto;
 }
