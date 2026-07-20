@@ -1,9 +1,9 @@
 ---
-import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Sidebar from '../../components/Sidebar.astro';
 import PostList from '../../components/PostList.astro';
 import { site } from '../../config/site';
+import { getPublishedPosts } from '../../lib/content';
 
 export async function getStaticPaths() {
   return site.authors.map((author) => ({
@@ -13,9 +13,7 @@ export async function getStaticPaths() {
 }
 
 const { author } = Astro.props;
-const posts = (await getCollection('posts'))
-  .filter((p) => p.data.author === author.id)
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const posts = (await getPublishedPosts()).filter((p) => p.data.author === author.id);
 const title = `${author.name}가 쓴 글`;
 ---
 

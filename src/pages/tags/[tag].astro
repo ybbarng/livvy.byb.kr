@@ -1,21 +1,19 @@
 ---
-import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Sidebar from '../../components/Sidebar.astro';
 import PostList from '../../components/PostList.astro';
 import { tagSlug } from '../../lib/path';
+import { getPublishedPosts } from '../../lib/content';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('posts');
+  const posts = await getPublishedPosts();
   const tags = new Set<string>();
   posts.forEach((p) => p.data.tags.forEach((t) => tags.add(t)));
   return [...tags].map((tag) => ({
     params: { tag: tagSlug(tag) },
     props: {
       tag,
-      posts: posts
-        .filter((p) => p.data.tags.includes(tag))
-        .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf()),
+      posts: posts.filter((p) => p.data.tags.includes(tag)),
     },
   }));
 }

@@ -1,12 +1,13 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { authorPath, tagPath } from '../../lib/path';
 import { koreanDate } from '../../lib/date';
 import { authorName } from '../../config/site';
+import { getPublishedPosts } from '../../lib/content';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('posts');
+  const posts = await getPublishedPosts();
   return posts.map((post) => ({
     params: { slug: post.data.slug },
     props: { post },
