@@ -6,6 +6,7 @@ import { koreanDate } from '../../lib/date';
 import { authorName } from '../../config/site';
 import { getPublishedPosts } from '../../lib/content';
 import Giscus from '../../components/Giscus.astro';
+import DisqusArchive from '../../components/DisqusArchive.astro';
 
 export async function getStaticPaths() {
   const posts = await getPublishedPosts();
@@ -51,6 +52,7 @@ const { title, date, author, tags, description } = post.data;
         )
       }
       <hr />
+      <DisqusArchive slug={post.data.slug} />
       <Giscus />
     </div>
   </div>
