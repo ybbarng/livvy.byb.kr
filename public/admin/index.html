@@ -30,6 +30,14 @@
       #deploy-toast.show {
         opacity: 1;
       }
+      #deploy-toast .dt-icon-wrap {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex: none;
+        width: 17px;
+        height: 17px;
+      }
       #deploy-toast .dt-spin {
         width: 15px;
         height: 15px;
@@ -37,7 +45,7 @@
         border-top-color: #fff;
         border-radius: 50%;
         animation: dt-spin 0.7s linear infinite;
-        flex: none;
+        box-sizing: border-box;
       }
       @keyframes dt-spin {
         to {
