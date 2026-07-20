@@ -12,6 +12,13 @@ export default defineConfig({
     format: 'directory',
   },
   integrations: [sitemap()],
+  image: {
+    // 마크다운 이미지도 자동으로 여러 크기의 축소본 + srcset 을 생성한다.
+    // constrained: 표시 폭에 맞춰 내려받고(원본보다 크게는 안 키움), 화면 밀도별로 선택.
+    // → 640px 로 보여줄 사진을 4128px 원본째 내려받던 낭비를 없앤다.
+    layout: 'constrained',
+    responsiveStyles: true,
+  },
   markdown: {
     // 기존 gatsby-remark-prismjs(okaidia 테마)를 재현. CSS는 styles/base/_highlight.scss.
     syntaxHighlight: 'prism',
