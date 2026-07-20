@@ -12,9 +12,9 @@ backend:
 # UI 언어
 locale: ko
 
-# 미디어 기본값(컬렉션에서 각자 재정의). 실제 이미지는 각 글 폴더에 저장된다.
-media_folder: src/assets/uploads
-public_folder: /assets/uploads
+# 이미지 저장 위치(전역). 컬렉션별로 재정의하면 Sveltia가 루트에 저장하는 문제가 있어 전역만 쓴다.
+media_folder: public/uploads # 저장소의 public/uploads/ 에 저장
+public_folder: /uploads # 마크다운엔 /uploads/파일명 으로 삽입 → 빌드 시 그대로 서빙
 
 collections:
   - name: posts
@@ -23,8 +23,6 @@ collections:
     description: 블로그 글
     folder: src/content/posts
     path: '{{fields.slug}}/index' # src/content/posts/{slug}/index.md
-    media_folder: public/uploads # 이미지는 public/uploads 에 저장
-    public_folder: /uploads # 마크다운엔 /uploads/파일명 으로 삽입
     create: true
     slug: '{{fields.slug}}'
     identifier_field: title
@@ -92,8 +90,6 @@ collections:
     description: about 같은 정적 페이지
     folder: src/content/pages
     path: '{{fields.slug}}/index'
-    media_folder: public/uploads
-    public_folder: /uploads
     create: true
     slug: '{{fields.slug}}'
     identifier_field: title
