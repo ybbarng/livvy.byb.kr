@@ -33,6 +33,7 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
     "@types/lodash-es": "^4.17.12",
+    "playwright": "^1.61.1",
     "postcss-pxtorem": "^6.1.0",
     "prismjs": "^1.30.0",
     "typescript": "^5.9.3",
