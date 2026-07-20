@@ -6,26 +6,24 @@
     <meta name="robots" content="noindex" />
     <title>콘텐츠 관리 · 현지와 용배의 블로그</title>
     <style>
-      /* 게시 상태 토스트 — 상단 툴바의 '+'(Create) 버튼 왼쪽에 실시간으로 붙는다.
-         버튼 위치를 매 프레임 측정하므로 infobar 등장·리사이즈에도 유연하게 따라간다.
-         position:fixed 오버레이라 Sveltia 레이아웃에 영향을 주지 않는다. */
+      /* 게시 상태 토스트 — Sveltia 상단 앱바(툴바) DOM 안에 삽입되는 아이템.
+         데스크톱은 우측 버튼 그룹 앞, 모바일은 FAB 앞(여유 공간)에 자리한다.
+         앱바의 일부라 위치/레이아웃이 항상 앱바를 따른다. */
       #deploy-toast {
-        position: fixed;
-        top: 9px;
-        left: 0;
-        z-index: 2147483647;
         display: none;
         align-items: center;
         gap: 7px;
         height: 30px;
         padding: 0 13px 0 9px;
+        margin: 0 6px;
         border-radius: 16px;
         color: #fff;
         font: 500 13px/1 -apple-system, BlinkMacSystemFont, 'Noto Sans KR', sans-serif;
         white-space: nowrap;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
         opacity: 0;
         transition: opacity 0.25s ease, background 0.3s ease;
+        flex: none;
+        align-self: center;
       }
       #deploy-toast.show {
         opacity: 1;
@@ -94,8 +92,6 @@
       (function () {
         const REPO = 'ybbarng/livvy.byb.kr';
         const RUNS = `https://api.github.com/repos/${REPO}/actions/runs?branch=main&per_page=1`;
-        // 앵커: 데스크톱 '+'(Create Entry or Assets), 모바일 'Create New Entry'
-        const ANCHOR_SEL = '[aria-label="Create Entry or Assets"], [aria-label="Create New Entry"]';
 
         const SPIN = '<span class="dt-icon-wrap"><span class="dt-spin"></span></span>';
         const CHECK =
@@ -110,33 +106,28 @@
 
         const toast = document.createElement('div');
         toast.id = 'deploy-toast';
-        document.body.appendChild(toast);
 
-        // '+' 버튼 왼쪽에 실시간으로 붙이기(툴바가 밀려도 따라감)
-        function reposition() {
-          const a = document.querySelector(ANCHOR_SEL);
-          if (a) {
-            const r = a.getBoundingClientRect();
-            toast.style.left = Math.max(8, r.left - toast.offsetWidth - 8) + 'px';
-            toast.style.top = Math.round(r.top + r.height / 2 - toast.offsetHeight / 2) + 'px';
-          } else {
-            toast.style.left = 'auto';
-            toast.style.right = '12px';
-            toast.style.top = '9px';
+        // 앱바(툴바) 안에 토스트를 삽입/유지한다.
+        function mount() {
+          const inner = document.querySelector('.sui.toolbar.horizontal.primary .inner');
+          if (!inner) return false;
+          if (toast.parentElement === inner) return true;
+          // 모바일: FAB(Create New Entry) 앞 / 데스크톱: 우측 버튼 그룹 앞
+          const fab = inner.querySelector('.floating-action-button-wrapper');
+          let ref = fab;
+          if (!ref) {
+            const groups = inner.querySelectorAll(':scope > .buttons');
+            ref = groups[groups.length - 1] || null;
           }
+          if (ref) inner.insertBefore(toast, ref);
+          else inner.appendChild(toast);
+          return true;
         }
-        let rafId = null;
-        function startTracking() {
-          const loop = () => {
-            reposition();
-            rafId = requestAnimationFrame(loop);
-          };
-          loop();
-        }
-        function stopTracking() {
-          if (rafId) cancelAnimationFrame(rafId);
-          rafId = null;
-        }
+        // Sveltia가 화면을 다시 그려도 토스트가 보이는 동안 계속 앱바에 재삽입
+        const mo = new MutationObserver(() => {
+          if (toast.style.display !== 'none') mount();
+        });
+        mo.observe(document.body, { childList: true, subtree: true });
 
         let hideTimer = null;
         function render(icon, text, bg, opts = {}) {
@@ -145,8 +136,7 @@
           toast.style.background = bg;
           toast.classList.toggle('done', !!opts.pop);
           toast.style.display = 'flex';
-          reposition();
-          startTracking();
+          mount();
           requestAnimationFrame(() => toast.classList.add('show'));
           if (opts.autoHide) hideTimer = setTimeout(hide, opts.autoHide);
         }
@@ -154,7 +144,6 @@
           toast.classList.remove('show');
           setTimeout(() => {
             toast.style.display = 'none';
-            stopTracking();
           }, 260);
         }
 
@@ -179,7 +168,7 @@
         }
 
         // expectNew=true: 방금 저장 → 새 워크플로 run 을 기다린다.
-        // expectNew=false: 진입 시 체크 → 이미 진행 중인 run 이 있으면 그걸 추적한다.
+        // expectNew=false: 진입 시 체크 → 이미 진행 중인 run 이 있으면 추적한다.
         let polling = false;
         async function watch(expectNew) {
           if (polling) return;
@@ -190,7 +179,7 @@
             render(SPIN, '저장됨 — 게시 준비 중…', '#475569');
           } else if (!base || base.status === 'completed') {
             polling = false;
-            return; // 진입 시 진행 중인 배포 없음 → 조용히 종료
+            return;
           } else {
             render(SPIN, '게시 중… 빌드하고 있어요', '#475569');
           }
@@ -214,14 +203,14 @@
                 return;
               }
             } else if (run.status !== 'completed') {
-              targetId = run.id; // 더 새 run 이 시작되면 그걸 추적
+              targetId = run.id;
             }
           }
           hide();
           polling = false;
         }
 
-        // 진입 시 이미 빌드 중인지 한 번 확인(Sveltia 로드 뒤)
+        // 진입 시 이미 빌드 중인지 확인
         setTimeout(() => watch(false), 3500);
 
         // 저장(Save) 클릭 감지 → 새 배포 추적
