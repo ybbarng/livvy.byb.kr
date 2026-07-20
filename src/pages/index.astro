@@ -1,19 +1,15 @@
 ---
-// 임시 검증용 홈 (Task #4에서 실제 글 목록으로 교체)
+import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Sidebar from '../components/Sidebar.astro';
+import PostList from '../components/PostList.astro';
+
+const posts = (await getCollection('posts')).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
 ---
 
 <BaseLayout>
   <Sidebar isIndex={true} />
-  <div class="content">
-    <div class="content__inner">
-      <h2>레이아웃 검증</h2>
-      <p>
-        본문 텍스트와 <a href="#">파란 링크</a>. 여러 언어: 한국어 · 日本語 · 中文 · français café
-      </p>
-      <p>사이드바(현지 &amp; 용배)가 왼쪽, 본문이 오른쪽에 나란히 놓이는지 확인.</p>
-      <pre class="language-javascript"><code>const greeting = "okaidia 코드 하이라이트";</code></pre>
-    </div>
-  </div>
+  <PostList posts={posts} />
 </BaseLayout>

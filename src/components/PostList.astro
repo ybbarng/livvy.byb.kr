@@ -1,0 +1,33 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Post from './Post.astro';
+
+interface Props {
+  title?: string;
+  posts: CollectionEntry<'posts'>[];
+}
+const { title, posts } = Astro.props;
+---
+
+<div class="content">
+  <div class="content__inner">
+    <div class="page">
+      {title && <h1 class="page__title">{title}</h1>}
+      <div class="page__body">
+        {posts.map((p) => <Post post={p} />)}
+      </div>
+    </div>
+  </div>
+</div>
+
+<style lang="scss">
+  @import '../styles/variables';
+  @import '../styles/mixins';
+
+  .page__title {
+    font-size: $typographic-base-font-size * 1.5;
+    font-weight: 600;
+    @include margin-top(0);
+    @include margin-bottom(1);
+  }
+</style>

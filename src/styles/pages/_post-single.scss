@@ -1,0 +1,144 @@
+/**
+ * Post single (글 상세) — 마크다운 본문에 적용되므로 전역 스타일로 둔다.
+ * 기존 PostTemplateDetails/style.scss 이식.
+ * .gatsby-highlight 래퍼는 Astro Prism 의 pre[class*="language-"] 로 대체한다.
+ */
+
+.post-single {
+    &__inner {
+        max-width: $layout-post-single-max-width;
+        padding: 0 15px;
+        margin: 0 auto;
+    }
+    &__title {
+        font-size: $typographic-base-font-size * 2;
+        max-width: $layout-post-single-width;
+        margin-left: auto;
+        margin-right: auto;
+        font-weight: 600;
+        text-align: center;
+        color: #333333;
+        @include line-height(1.65);
+        @include margin-top(1);
+        @include margin-bottom(0);
+    }
+    &__body {
+        max-width: $layout-post-single-width;
+        margin-left: auto;
+        margin-right: auto;
+        & figure {
+            @include margin-bottom(1);
+            & blockquote {
+                font-style: italic;
+                text-align: center;
+                margin-top: 0;
+                @include padding(1, 0);
+                & p {
+                    max-width: $layout-post-single-width;
+                    font-size: $typographic-base-font-size * 1.6817;
+                    margin-top: 0;
+                    @include margin-bottom(1);
+                    @include line-height(1.5);
+                }
+            }
+        }
+        & a {
+            text-decoration: underline;
+        }
+        & pre[class*="language-"] {
+            max-width: $layout-post-single-width;
+            margin-left: 15px;
+            margin-right: 15px;
+            @include margin-bottom(1);
+        }
+        & :not(div) {
+            max-width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    }
+    &__footer {
+        max-width: $layout-post-single-width;
+        margin-left: 15px;
+        margin-right: 15px;
+        @include line-height(1);
+        @include margin-top(1);
+        @include margin-bottom(2);
+        &-text {
+            & a {
+                text-decoration: underline;
+            }
+        }
+    }
+    &__date {
+        max-width: $layout-post-single-width;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    &__tags {
+        @include margin-bottom(.5);
+        &-list {
+            list-style: none;
+            margin: 0 -5px;
+            padding: 0;
+            &-item {
+                display: inline-block;
+                margin: 10px 5px;
+                &-link {
+                    background: $color-gray-bg;
+                    text-decoration: none;
+                    border: 0;
+                    border-radius: 3px;
+                    color: darken($color-base, 4%);  // #555555
+                    line-height: $typographic-base-line-height;
+                    padding: 8px 16px;
+                    &:hover,
+                    &:focus {
+                        color: $color-base;
+                        background: darken($color-gray-bg, 5%);
+                        border: 0;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@include breakpoint-sm {
+    .post-single {
+        &__footer {
+            margin-left: auto;
+            margin-right: auto;
+        }
+        &__body {
+            & pre[class*="language-"] {
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
+    }
+}
+
+@include breakpoint-md {
+    .post-single {
+        &__inner {
+            padding: 0;
+        }
+        &__title {
+            font-size: $typographic-base-font-size * 2;
+            @include line-height(2.25);
+            @include margin-top(2.25);
+            @include margin-bottom(1.5);
+        }
+        &__body {
+            font-size: $typographic-base-font-size * 1.05;
+            @include line-height(1.125);
+            @include margin-bottom(1.125);
+            & p {
+                font-size: $typographic-base-font-size * 1.05;
+                @include line-height(1.125);
+                @include margin-bottom(1.125);
+            }
+        }
+    }
+}

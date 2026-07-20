@@ -1,0 +1,55 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { authorPath, tagPath } from '../../lib/path';
+import { koreanDate } from '../../lib/date';
+import { authorName } from '../../config/site';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return posts.map((post) => ({
+    params: { slug: post.data.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const { title, date, author, tags, description } = post.data;
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="post-single">
+    <div class="post-single__inner">
+      <h1 class="post-single__title">{title}</h1>
+      <div class="post-single__body">
+        <Content />
+      </div>
+    </div>
+    <div class="post-single__footer">
+      <p class="post-single__footer-text">
+        <em class="post-single__date">
+          {koreanDate(date)}에&nbsp;
+          <a href={authorPath(author)}><strong>{authorName(author)}</strong></a>가 씀.
+        </em>
+      </p>
+      {
+        tags.length > 0 && (
+          <div class="post-single__tags">
+            <ul class="post-single__tags-list">
+              {tags.map((tag) => (
+                <li class="post-single__tags-list-item">
+                  <a href={tagPath(tag)} class="post-single__tags-list-item-link">
+                    {tag}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )
+      }
+      <hr />
+      {/* Giscus 댓글은 Task #6에서 추가 */}
+    </div>
+  </div>
+</BaseLayout>

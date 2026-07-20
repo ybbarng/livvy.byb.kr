@@ -1,0 +1,109 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { postPath, authorPath, categoryPath } from '../lib/path';
+import { monthYear, longDateEn } from '../lib/date';
+import { authorName, categoryName } from '../config/site';
+
+interface Props {
+  post: CollectionEntry<'posts'>;
+}
+const { post } = Astro.props;
+const { title, slug, date, author, category, description } = post.data;
+---
+
+<div class="post">
+  <div class="post__meta">
+    <time class="post__meta-time" datetime={longDateEn(date)}>{monthYear(date)}</time>
+    <span class="post__meta-divider"></span>
+    <span class="post__meta-category">
+      <a href={categoryPath(category)} class="post__meta-category-link">{categoryName(category)}</a>
+    </span>
+    <span class="post__meta-author">
+      <a href={authorPath(author)} class="post__meta-author-link">{authorName(author)}</a>
+    </span>
+  </div>
+  <h2 class="post__title">
+    <a class="post__title-link" href={postPath(slug)}>{title}</a>
+  </h2>
+  {description && <div class="post__description">{description}</div>}
+  <a class="post__readmore" href={postPath(slug)}>Read</a>
+</div>
+
+<style lang="scss">
+  @import '../styles/variables';
+  @import '../styles/mixins';
+
+  .post {
+    @include margin-bottom(1.25);
+
+    &:last-child {
+      @include margin-bottom(.5);
+    }
+
+    &__title {
+      font-size: $typographic-base-font-size * 1.6875;
+      @include line-height(1.5);
+      @include margin-top(0);
+      @include margin-bottom(.5);
+
+      &-link {
+        color: $color-base;
+
+        &:hover,
+        &:focus {
+          color: $color-base;
+          border-bottom: 1px solid $color-base;
+        }
+      }
+    }
+
+    &__description {
+      font-size: $typographic-base-font-size;
+      @include line-height(1);
+      @include margin-bottom(.75);
+    }
+
+    &__meta {
+      &-time {
+        font-family: $capital-font-family;
+        font-size: $typographic-small-font-size;
+        color: $color-base;
+        font-weight: 500;
+        text-transform: uppercase;
+      }
+
+      &-divider {
+        margin: 0 5px;
+      }
+
+      &-category {
+        &-link {
+          font-size: $typographic-small-font-size;
+          color: $color-secondary;
+          font-weight: 500;
+          text-transform: uppercase;
+
+          &:hover,
+          &:focus {
+            color: $color-primary;
+          }
+        }
+      }
+
+      &-author {
+        float: right;
+      }
+    }
+
+    &__readmore {
+      font-size: $typographic-base-font-size;
+      color: $color-primary;
+
+      &:hover,
+      &:focus {
+        color: $color-primary;
+        border-bottom: 1px solid $color-primary;
+      }
+    }
+  }
+</style>
