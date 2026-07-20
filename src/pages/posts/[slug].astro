@@ -5,6 +5,7 @@ import { authorPath, tagPath } from '../../lib/path';
 import { koreanDate } from '../../lib/date';
 import { authorName } from '../../config/site';
 import { getPublishedPosts } from '../../lib/content';
+import Giscus from '../../components/Giscus.astro';
 
 export async function getStaticPaths() {
   const posts = await getPublishedPosts();
@@ -50,7 +51,7 @@ const { title, date, author, tags, description } = post.data;
         )
       }
       <hr />
-      {/* Giscus 댓글은 Task #6에서 추가 */}
+      <Giscus />
     </div>
   </div>
 </BaseLayout>

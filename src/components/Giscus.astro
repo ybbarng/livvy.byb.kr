@@ -1,0 +1,34 @@
+---
+// GitHub Discussions 기반 댓글(Giscus). 글 경로(pathname)로 Discussion을 매핑한다.
+// 실제 동작하려면 저장소에 giscus GitHub App 설치가 필요하다: https://github.com/apps/giscus
+---
+
+<section class="comments">
+  <script
+    src="https://giscus.app/client.js"
+    data-repo="ybbarng/livvy.byb.kr"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkxMDg1NjY1NTE="
+    data-category="Announcements"
+    data-category-id="DIC_kwDOBniYF84DBkbb"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="light"
+    data-lang="ko"
+    data-loading="lazy"
+    crossorigin="anonymous"
+    async></script>
+</section>
+
+<style lang="scss">
+  @import '../styles/variables';
+  @import '../styles/mixins';
+
+  .comments {
+    max-width: $layout-post-single-width;
+    margin: 0 auto;
+    @include margin-top(1);
+  }
+</style>
