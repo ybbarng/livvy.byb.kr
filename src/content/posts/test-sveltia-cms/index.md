@@ -8,7 +8,7 @@ tags:
   - cms
   - blog
 description: 테스트임
-draft: true
+draft: false
 ---
 
 이것은 테스트이다.
@@ -16,6 +16,5 @@ draft: true
 ありがとうございます。
 
 Coréen.
-
 
 ![](SCR-20260710-plkl.png)
