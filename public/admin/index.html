@@ -107,20 +107,31 @@
         const toast = document.createElement('div');
         toast.id = 'deploy-toast';
 
-        // 앱바(툴바) 안에 토스트를 삽입/유지한다.
+        // 앱바(툴바)의 '+'(데스크톱) 또는 FAB(모바일) 버튼 바로 왼쪽에 삽입/유지한다.
         function mount() {
           const inner = document.querySelector('.sui.toolbar.horizontal.primary .inner');
           if (!inner) return false;
-          if (toast.parentElement === inner) return true;
-          // 모바일: FAB(Create New Entry) 앞 / 데스크톱: 우측 버튼 그룹 앞
-          const fab = inner.querySelector('.floating-action-button-wrapper');
-          let ref = fab;
-          if (!ref) {
-            const groups = inner.querySelectorAll(':scope > .buttons');
-            ref = groups[groups.length - 1] || null;
+          // 데스크톱: '+' 버튼 바로 앞(우측 버튼 그룹 안). 그룹이 오른쪽 끝으로 밀려 있어
+          //          그룹 자체 앞에 넣으면 왼쪽으로 떨어져 보이므로, 반드시 그룹 안으로 들어간다.
+          // 모바일: FAB(Create New Entry) 바로 앞(spacer 다음).
+          const target =
+            inner.querySelector('[aria-label="Create Entry or Assets"]') ||
+            inner.querySelector('.floating-action-button-wrapper');
+          if (target) {
+            const parent = target.parentElement;
+            // 이미 올바른 자리면 다시 넣지 않는다(MutationObserver 되먹임 방지).
+            if (toast.parentElement === parent && toast.nextElementSibling === target) return true;
+            parent.insertBefore(toast, target);
+            return true;
           }
-          if (ref) inner.insertBefore(toast, ref);
-          else inner.appendChild(toast);
+          // 버튼을 못 찾으면 우측 버튼 그룹 앞(차선책)
+          const groups = inner.querySelectorAll(':scope > .buttons');
+          const g = groups[groups.length - 1];
+          if (g) {
+            if (!(toast.parentElement === inner && toast.nextElementSibling === g)) inner.insertBefore(toast, g);
+          } else if (toast.parentElement !== inner) {
+            inner.appendChild(toast);
+          }
           return true;
         }
         // Sveltia가 화면을 다시 그려도 토스트가 보이는 동안 계속 앱바에 재삽입
