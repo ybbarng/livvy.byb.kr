@@ -1,0 +1,111 @@
+# Sveltia CMS 설정
+# 문서: https://sveltiacms.app/en/docs/
+
+backend:
+  name: github
+  repo: ybbarng/livvy.byb.kr
+  branch: main
+  # GitHub Pages(서버리스)에서 로그인하려면 OAuth 중개자가 필요하다.
+  # Cloudflare Worker(sveltia-cms-auth) 주소.
+  base_url: https://sveltia-cms-auth.ybbarng.workers.dev
+
+# UI 언어
+locale: ko
+
+# 미디어 기본값(컬렉션에서 각자 재정의). 실제 이미지는 각 글 폴더에 저장된다.
+media_folder: src/assets/uploads
+public_folder: /assets/uploads
+
+collections:
+  - name: posts
+    label: 글
+    label_singular: 글
+    description: 블로그 글
+    folder: src/content/posts
+    path: '{{fields.slug}}/index' # src/content/posts/{slug}/index.md
+    media_folder: '' # 엔트리(글)와 같은 폴더에 이미지 저장 → astro:assets 최적화
+    public_folder: ''
+    create: true
+    slug: '{{fields.slug}}'
+    identifier_field: title
+    summary: '{{title}} ({{fields.slug}})'
+    sortable_fields: [date, title]
+    fields:
+      - { name: title, label: 제목, widget: string }
+      - {
+          name: slug,
+          label: 'slug (URL 주소)',
+          widget: string,
+          hint: 'URL이 되는 값입니다. 한글 가능, 공백 대신 하이픈(-)을 쓰세요. 예: 놀러-가고-싶다',
+        }
+      - {
+          name: date,
+          label: 게시일,
+          widget: datetime,
+          input_timezone: local, # 작성하는 곳의 시간대로 입력
+          output_utc: false, # UTC로 바꾸지 않고 현지 시각(offset) 그대로 저장
+          default: '{{now}}',
+        }
+      - {
+          name: author,
+          label: 저자,
+          widget: select,
+          options:
+            [{ label: 현지, value: livvy }, { label: 용배, value: ybbarng }],
+        }
+      - {
+          name: category,
+          label: 카테고리,
+          widget: select,
+          options:
+            [
+              { label: 잡담, value: smalltalk },
+              { label: 공부, value: study },
+              { label: 같이 놀기, value: date },
+            ],
+        }
+      - { name: tags, label: 태그, widget: list, required: false, default: [] }
+      - {
+          name: description,
+          label: 요약,
+          widget: text,
+          required: false,
+          hint: '목록과 미리보기(SNS 공유)에 쓰이는 짧은 소개입니다.',
+        }
+      - {
+          name: draft,
+          label: '초안 (체크하면 사이트에 안 보임)',
+          widget: boolean,
+          default: false,
+        }
+      - {
+          name: body,
+          label: 본문,
+          widget: markdown,
+          hint: '이미지는 끌어다 놓거나 붙여넣으면 자동으로 첨부됩니다.',
+        }
+
+  - name: pages
+    label: 페이지
+    label_singular: 페이지
+    description: about 같은 정적 페이지
+    folder: src/content/pages
+    path: '{{fields.slug}}/index'
+    media_folder: ''
+    public_folder: ''
+    create: true
+    slug: '{{fields.slug}}'
+    identifier_field: title
+    fields:
+      - { name: title, label: 제목, widget: string }
+      - { name: slug, label: 'slug (URL 주소)', widget: string }
+      - {
+          name: date,
+          label: 게시일,
+          widget: datetime,
+          input_timezone: local,
+          output_utc: false,
+          required: false,
+        }
+      - { name: description, label: 요약, widget: text, required: false }
+      - { name: body, label: 본문, widget: markdown }
