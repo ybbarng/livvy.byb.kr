@@ -11,7 +11,8 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "check": "astro check"
+    "check": "astro check",
+    "test": "vitest run"
   },
   "repository": "git+https://github.com/ybbarng/livvy.byb.kr.git",
   "author": "Bang Yongbae <ybbarng@gmail.com>",
@@ -34,6 +35,7 @@
     "@types/lodash-es": "^4.17.12",
     "postcss-pxtorem": "^6.1.0",
     "prismjs": "^1.30.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.10"
   }
 }

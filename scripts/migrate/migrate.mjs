@@ -154,7 +154,8 @@ for (const page of pages) {
   const r = await processImages(body, dir);
   body = r.body;
   imgCount += r.downloaded.length;
-  const fm = frontmatter({ title, slug, description });
+  const datetime = f(page.fields.datetime);
+  const fm = frontmatter({ title, slug, date: datetime, description });
   await fs.writeFile(path.join(dir, 'index.md'), `${fm}\n${body.trim()}\n`);
   console.log(`  [page]  ${slug}`);
 }

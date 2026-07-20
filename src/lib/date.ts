@@ -1,18 +1,28 @@
-// 기존 moment 포맷을 Intl 로 대체한다(외부 의존 없음).
+// 게시일은 ISO 8601 문자열(offset 포함, 예: "2018-12-02T00:00+09:00")로 다룬다.
+// 표시는 "작성 당시 현지 벽시계 시각"을 그대로 보여준다(파리에서 쓰면 파리 시각).
+// 정렬/비교는 절대시각(UTC)으로 하려면 new Date(raw).valueOf() 를 쓴다.
 
-// 'MMMM YYYY' — 예: "February 2019" (목록 메타, Roboto 대문자로 표시)
-export const monthYear = (d: Date) =>
-  new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(d);
+// 절대시각에 offset 을 더해 "벽시계 값을 UTC 로 표현한 Date" 를 만든다.
+// 이 Date 를 UTC 기준으로 읽으면 원본의 연월일시분이 그대로 나온다.
+function wallClock(raw: string): Date {
+  const abs = new Date(raw);
+  const m = raw.match(/([+-])(\d{2}):?(\d{2})$/);
+  const offsetMin = m ? (m[1] === '-' ? -1 : 1) * (parseInt(m[2], 10) * 60 + parseInt(m[3], 10)) : 0;
+  return new Date(abs.getTime() + offsetMin * 60000);
+}
 
-// 'MMMM D, YYYY' — 예: "February 21, 2019" (time datetime 속성용)
-export const longDateEn = (d: Date) =>
-  new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' }).format(d);
+// 'MMMM YYYY' — 예: "February 2019" (목록 메타, Roboto 대문자)
+export const monthYear = (raw: string) =>
+  new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(wallClock(raw));
 
-// 'YYYY년 MM월 DD일' — 예: "2019년 02월 21일" (글 상세 푸터)
-export const koreanDate = (d: Date) => {
-  const parts = new Intl.DateTimeFormat('en-CA', {
-    year: 'numeric', month: '2-digit', day: '2-digit', timeZone: 'UTC',
-  }).formatToParts(d);
-  const get = (t: string) => parts.find((p) => p.type === t)?.value ?? '';
-  return `${get('year')}년 ${get('month')}월 ${get('day')}일`;
+// 'YYYY년 MM월 DD일' — 예: "2018년 12월 02일" (글 상세 푸터)
+export const koreanDate = (raw: string) => {
+  const d = wallClock(raw);
+  const y = d.getUTCFullYear();
+  const mo = String(d.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(d.getUTCDate()).padStart(2, '0');
+  return `${y}년 ${mo}월 ${day}일`;
 };
+
+// 절대시각 정렬용 (최신순 비교)
+export const toEpoch = (raw: string) => new Date(raw).valueOf();

@@ -1,6 +1,7 @@
 ---
 title: "About Ybbarng"
 slug: "about-ybbarng"
+date: "2018-01-20T18:00+09:00"
 description: "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante."
 ---
 

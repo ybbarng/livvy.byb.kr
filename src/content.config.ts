@@ -10,7 +10,9 @@ const posts = defineCollection({
   schema: z.object({
     title: z.string(),
     slug: z.string(), // kebab 처리된 최종 slug (URL 무손실용)
-    date: z.coerce.date(),
+    // ISO 8601 문자열(offset 포함)로 둔다. 작성 당시 현지 시각+시간대를 보존하기 위해
+    // Date 로 파싱하지 않는다(파싱하면 offset 정보가 사라짐). 정렬은 코드에서 절대시각으로.
+    date: z.string(),
     author: authorEnum,
     category: categoryEnum,
     tags: z.array(z.string()).default([]),
@@ -24,6 +26,7 @@ const pages = defineCollection({
   schema: z.object({
     title: z.string(),
     slug: z.string().optional(),
+    date: z.string().optional(), // 정적 페이지의 게시일(offset 포함 ISO). 표시엔 안 쓰지만 보존.
     description: z.string().optional(),
   }),
 });

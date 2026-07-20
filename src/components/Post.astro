@@ -1,7 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import { postPath, authorPath, categoryPath } from '../lib/path';
-import { monthYear, longDateEn } from '../lib/date';
+import { monthYear } from '../lib/date';
 import { authorName, categoryName } from '../config/site';
 
 interface Props {
@@ -13,7 +13,7 @@ const { title, slug, date, author, category, description } = post.data;
 
 <div class="post">
   <div class="post__meta">
-    <time class="post__meta-time" datetime={longDateEn(date)}>{monthYear(date)}</time>
+    <time class="post__meta-time" datetime={date}>{monthYear(date)}</time>
     <span class="post__meta-divider"></span>
     <span class="post__meta-category">
       <a href={categoryPath(category)} class="post__meta-category-link">{categoryName(category)}</a>
