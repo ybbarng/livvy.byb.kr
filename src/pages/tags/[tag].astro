@@ -1,0 +1,30 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Sidebar from '../../components/Sidebar.astro';
+import PostList from '../../components/PostList.astro';
+import { tagSlug } from '../../lib/path';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  const tags = new Set<string>();
+  posts.forEach((p) => p.data.tags.forEach((t) => tags.add(t)));
+  return [...tags].map((tag) => ({
+    params: { tag: tagSlug(tag) },
+    props: {
+      tag,
+      posts: posts
+        .filter((p) => p.data.tags.includes(tag))
+        .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf()),
+    },
+  }));
+}
+
+const { tag, posts } = Astro.props;
+const title = `'${tag}' 태그가 달린 글`;
+---
+
+<BaseLayout title={title}>
+  <Sidebar />
+  <PostList title={title} posts={posts} />
+</BaseLayout>

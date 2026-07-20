@@ -1,0 +1,39 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Sidebar from '../../components/Sidebar.astro';
+import { site } from '../../config/site';
+import { categoryPath } from '../../lib/path';
+
+const posts = await getCollection('posts');
+const categories = site.categories.map((c) => ({
+  ...c,
+  count: posts.filter((p) => p.data.category === c.slug).length,
+}));
+---
+
+<BaseLayout title="모든 분류">
+  <Sidebar />
+  <div class="content">
+    <div class="content__inner">
+      <div class="page">
+        <h1 class="page__title">분류</h1>
+        <div class="page__body">
+          <div class="categories">
+            <ul class="categories__list">
+              {
+                categories.map((c) => (
+                  <li class="categories__list-item">
+                    <a href={categoryPath(c.slug)} class="categories__list-item-link">
+                      {c.name} ({c.count})
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

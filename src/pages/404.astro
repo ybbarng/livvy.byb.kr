@@ -1,0 +1,32 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Sidebar from '../components/Sidebar.astro';
+import notFound from '../assets/images/404.jpg';
+---
+
+<BaseLayout title="Not Found">
+  <Sidebar />
+  <div class="content">
+    <div class="content__inner">
+      <div class="page">
+        <div class="page__body">
+          <Image
+            class="page-photo"
+            src={notFound}
+            width={633}
+            alt="페이지를 찾을 수 없습니다."
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style lang="scss">
+  .page-photo {
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+  }
+</style>

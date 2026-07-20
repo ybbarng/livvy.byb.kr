@@ -19,14 +19,14 @@ const pages = [
   ['post-code', '/posts/hello-tls-1-3/'],
   ['post-ko', '/posts/흔하지만-흔하지-않은-붕어빵/'],
   ['post-image', '/posts/john-legend-ticket/'],
-  ['categories', '/categories'],
+  ['categories', '/categories/'],
   ['category-study', '/categories/study/'],
-  ['tags', '/tags'],
+  ['tags', '/tags/'],
   ['tag-tls', '/tags/tls/'],
   ['author-ybbarng', '/authors/ybbarng/'],
   ['author-livvy', '/authors/livvy/'],
   ['page-about', '/pages/about-ybbarng/'],
-  ['notfound', '/404'],
+  ['notfound', '/this-page-does-not-exist/'],
 ];
 
 const viewports = [

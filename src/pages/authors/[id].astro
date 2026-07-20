@@ -1,0 +1,25 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Sidebar from '../../components/Sidebar.astro';
+import PostList from '../../components/PostList.astro';
+import { site } from '../../config/site';
+
+export async function getStaticPaths() {
+  return site.authors.map((author) => ({
+    params: { id: author.id },
+    props: { author },
+  }));
+}
+
+const { author } = Astro.props;
+const posts = (await getCollection('posts'))
+  .filter((p) => p.data.author === author.id)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const title = `${author.name}가 쓴 글`;
+---
+
+<BaseLayout title={title}>
+  <Sidebar />
+  <PostList title={title} posts={posts} />
+</BaseLayout>

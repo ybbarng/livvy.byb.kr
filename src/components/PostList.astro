@@ -19,15 +19,4 @@ const { title, posts } = Astro.props;
     </div>
   </div>
 </div>
-
-<style lang="scss">
-  @import '../styles/variables';
-  @import '../styles/mixins';
-
-  .page__title {
-    font-size: $typographic-base-font-size * 1.5;
-    font-weight: 600;
-    @include margin-top(0);
-    @include margin-bottom(1);
-  }
-</style>
+{/* .page/.page__title 스타일은 전역(styles/pages/_page.scss) */}

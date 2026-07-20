@@ -1,0 +1,24 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Sidebar from '../../components/Sidebar.astro';
+import PostList from '../../components/PostList.astro';
+import { site } from '../../config/site';
+
+export async function getStaticPaths() {
+  return site.categories.map((category) => ({
+    params: { slug: category.slug },
+    props: { category },
+  }));
+}
+
+const { category } = Astro.props;
+const posts = (await getCollection('posts'))
+  .filter((p) => p.data.category === category.slug)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<BaseLayout title={category.name}>
+  <Sidebar />
+  <PostList title={category.name} posts={posts} />
+</BaseLayout>
