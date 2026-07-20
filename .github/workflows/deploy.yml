@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write # 드래그앤드롭 이미지 위치 정리 커밋을 위해
   pages: write
   id-token: write
 
@@ -24,6 +24,16 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
+      - name: 드래그앤드롭 이미지 위치 정리 (Sveltia #830 우회)
+        run: |
+          node scripts/normalize-cms-images.mjs
+          if [ -n "$(git status --porcelain)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add -A
+            git commit -m "chore: 드래그앤드롭 이미지 위치 자동 정리"
+            git push
+          fi
       - run: npm run build
       - uses: actions/upload-pages-artifact@v3
         with:

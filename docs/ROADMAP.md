@@ -26,9 +26,11 @@
 - 에디터에서 **드래그앤드롭·붙여넣기**로 이미지 첨부 → 자동으로 저장소에 커밋 + 마크다운에 삽입
 - 미디어 라이브러리로 기존 이미지 재사용
 
-**현재 상태**: 이미지를 `public/uploads/`에 저장하고 절대경로(`/uploads/파일명`)로 참조. 동작은 확실하지만 `astro:assets` 최적화(webp 변환·리사이즈)는 적용되지 않고 원본이 그대로 서빙됨.
+**현재 동작**:
+- **Browse**(이미지 버튼 → 파일 선택): 이미지가 글 폴더에 저장 + `astro:assets` 최적화 ✅
+- **드래그앤드롭·붙여넣기**: **Sveltia 버그([#830](https://github.com/sveltia/sveltia-cms/issues/830), open)**로 이미지가 저장소 루트에 저장됨. 빌드 시 `scripts/normalize-cms-images.mjs`가 참조하는 글 폴더로 자동 이동해 우회한다(GitHub Actions에서 정리 커밋 후 빌드). 사용자는 드래그앤드롭을 그대로 쓸 수 있다.
 
-**개선 예정**: 글 폴더에 이미지를 함께 저장(entry-relative)해 `astro:assets` 최적화를 받게 하기. Sveltia의 `media_folder` entry-relative 동작이 기대와 달라(루트에 저장됨) 추가 조사가 필요. 이미지가 많아지면 Cloudflare R2/Images로 분리하는 것도 대안.
+**추적**: [Sveltia #830](https://github.com/sveltia/sveltia-cms/issues/830)이 fix되면 normalize 우회를 제거. 이미지가 아주 많아지면 Cloudflare R2/Images로 분리하는 것도 대안.
 
 ## 폰트
 
