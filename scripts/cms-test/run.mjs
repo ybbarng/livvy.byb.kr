@@ -21,8 +21,9 @@ page.on('dialog', async (d) => {
   else await d.accept();
 });
 
-console.log('→ /admin 접속');
-await page.goto('https://livvy.byb.kr/admin/', { waitUntil: 'load', timeout: 60000 });
+const BASE = process.env.ADMIN_URL || 'https://livvy.byb.kr';
+console.log(`→ ${BASE}/admin 접속`);
+await page.goto(`${BASE}/admin/`, { waitUntil: 'load', timeout: 60000 });
 await page.waitForTimeout(5000);
 
 console.log('→ Access Token 로그인 버튼 클릭');

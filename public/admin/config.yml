@@ -13,10 +13,9 @@ backend:
 locale: ko
 
 # 이미지 저장 위치(전역). 컬렉션별로 재정의하면 Sveltia가 루트에 저장하는 문제가 있어 전역만 쓴다.
-# 이미지 저장 위치. media_folder는 반드시 / 로 시작해야 저장소 루트 기준으로 인식된다.
-media_folder: /public/uploads
-public_folder: /uploads
-
+# 이미지: Browse(이미지 버튼)로 첨부하면 글 폴더에 저장된다(collection media_folder: '').
+# 드래그앤드롭/붙여넣기는 Sveltia 버그(#830)로 루트에 저장되지만, 빌드 시
+# scripts/normalize-cms-images.mjs 가 글 폴더로 자동 이동해 우회한다.
 collections:
   - name: posts
     label: 글
@@ -24,7 +23,7 @@ collections:
     description: 블로그 글
     folder: src/content/posts
     path: '{{fields.slug}}/index' # src/content/posts/{slug}/index.md
-    media_folder: ''
+    media_folder: '' # Browse 첨부 시 글 폴더에 저장(entry-relative)
     public_folder: ''
     create: true
     slug: '{{fields.slug}}'
