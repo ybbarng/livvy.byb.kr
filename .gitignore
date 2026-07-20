@@ -23,10 +23,6 @@ design-reference/diff/
 # disqus export (개인 대화 내용 — 이전 작업용 로컬 보관, 커밋하지 않음)
 scripts/disqus/
 
-# CMS 자동 테스트 스크린샷/출력 (스크립트 run.mjs만 커밋)
-scripts/cms-test/*.png
-scripts/cms-test/*.output
-
 # logs
 logs
 *.log
