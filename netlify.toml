@@ -1,0 +1,9 @@
+# Netlify 빌드 설정 (Astro)
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "24"
+
+# 없는 경로의 404.html 은 Netlify 가 자동으로 서빙한다(별도 redirect 불필요).
