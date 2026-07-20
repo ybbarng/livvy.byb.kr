@@ -11,5 +11,3 @@ draft: true
 ---
 
 asdfasdfasdf
-
-![](SCR-20260710-plkl.png)
