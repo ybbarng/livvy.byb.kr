@@ -1,0 +1,16 @@
+---
+import { site } from '../config/site';
+const { copyright = site.copyright } = Astro.props;
+---
+
+<p class="copyright">{copyright}</p>
+
+<style lang="scss">
+  @import '../styles/variables';
+
+  .copyright {
+    color: lighten($color-gray, 18%);
+    font-size: $typographic-small-font-size;
+    text-align: center;
+  }
+</style>

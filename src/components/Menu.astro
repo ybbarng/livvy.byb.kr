@@ -1,0 +1,188 @@
+---
+import { Image } from 'astro:assets';
+import { site } from '../config/site';
+import logo from '../assets/images/blog_logo.png';
+
+// 현재 경로로 활성 메뉴를 표시. trailingSlash:'always'라 경로 끝에 / 가 붙는다.
+const current = Astro.url.pathname;
+const isActive = (path: string) => current === path;
+---
+
+<nav class="menu">
+  <a class="menu__logo" href="/" title="메인 화면으로 가기">
+    <Image class="menu__logo__img" src={logo} width={116} height={45} alt="Y❤️H log" />
+  </a>
+
+  {/* 685px 이하에서 체크박스로 여닫는 순수 CSS 햄버거 (React 의존 제거) */}
+  <input type="checkbox" id="menu-toggle" class="menu__checkbox" hidden />
+  <label for="menu-toggle" class="menu__toggle" aria-label="메뉴 열기/닫기">&#9776;</label>
+
+  <ul class="menu__list">
+    {
+      site.menu.map((item) => (
+        <li class="menu__list-item">
+          <a
+            href={item.path}
+            class:list={['menu__list-item-link', { 'menu__list-item-link--active': isActive(item.path) }]}
+          >
+            {item.label}
+          </a>
+        </li>
+      ))
+    }
+    <li class="menu__list-item menu__list-item-login">
+      <a class="menu__list-item-link" href="/admin/" title="글쓰기 · 편집">Login</a>
+    </li>
+  </ul>
+</nav>
+
+<style lang="scss">
+  @import '../styles/variables';
+
+  .menu {
+    position: relative;
+
+    &__list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+
+      &-item {
+        padding: 0;
+        margin-bottom: 0;
+
+        &-link {
+          font-size: $typographic-base-font-size;
+          color: $typographic-base-font-color;
+          font-weight: 400;
+          padding: 0 1em;
+          height: $header-height;
+          line-height: $header-height;
+          display: block;
+          box-sizing: border-box;
+
+          &:hover,
+          &:focus {
+            color: $color-primary;
+            border-bottom: 1px solid $color-primary;
+          }
+
+          &--active {
+            color: $color-base;
+            border-bottom: 1px solid $color-base;
+          }
+        }
+      }
+
+      &-item-login {
+        position: absolute;
+        top: 0;
+        right: 0;
+      }
+    }
+
+    &__logo {
+      display: inline-block;
+      position: absolute;
+      width: 116px;
+      height: 45px;
+      top: 0;
+      left: 0;
+      margin-left: 16px;
+
+      &__img {
+        width: 116px;
+        height: 45px;
+      }
+
+      @media (max-width: 685px) {
+        margin: 0;
+        left: 50%;
+        transform: translate(-50%, 0);
+      }
+    }
+
+    // 햄버거 토글 (큰 화면에선 숨김)
+    &__checkbox {
+      display: none;
+    }
+
+    &__toggle {
+      display: none;
+      margin-left: auto;
+      margin-right: 0;
+      width: 45px;
+      height: 45px;
+      font-size: 25px;
+      line-height: 45px;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    @media (max-width: 685px) {
+      &__toggle {
+        display: block;
+        position: absolute;
+        top: 0;
+        right: 0;
+
+        &:hover,
+        &:focus {
+          color: $color-primary;
+        }
+      }
+
+      // 작은 화면: 기본 접힘, 체크 시 세로로 펼침
+      &__list {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: $header-height;
+        left: 0;
+        right: 0;
+        background: $color-white;
+
+        &-item-link {
+          background-color: $color-white;
+          padding: 0;
+          text-align: center;
+
+          &:hover,
+          &:focus {
+            background-color: lighten($color-primary, 25%);
+            border-bottom: none;
+          }
+
+          &--active {
+            background-color: darken($color-white, 5%);
+            border-bottom: none;
+          }
+        }
+
+        &-item-login {
+          position: relative;
+        }
+      }
+
+      &__checkbox:checked ~ &__list {
+        display: flex;
+      }
+    }
+
+    // 헤더 하단 그라데이션 구분선
+    &:after {
+      background: linear-gradient(to bottom, $color-gray-border 0%, $color-gray-border 48%, $color-white 100%);
+      position: absolute;
+      left: 0;
+      right: 0;
+      width: 100%;
+      max-width: $layout-width;
+      margin: 0 auto;
+      content: "";
+      height: 1px;
+    }
+  }
+</style>

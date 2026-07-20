@@ -1,0 +1,30 @@
+---
+import Menu from './Menu.astro';
+---
+
+<div class="header-wrapper">
+  <div class="header">
+    <Menu />
+  </div>
+</div>
+
+<style lang="scss">
+  @import '../styles/variables';
+
+  .header-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: $header-height;
+    background: $color-white;
+    z-index: 100;
+
+    .header {
+      position: relative;
+      height: $header-height;
+      max-width: $layout-width;
+      margin: 0 auto;
+    }
+  }
+</style>

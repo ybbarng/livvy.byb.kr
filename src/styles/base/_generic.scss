@@ -3,7 +3,10 @@
  */
 
 html {
-    font-size: $typographic-root-font-size;
+    // 원본은 `font-size: 100`(무단위)이라 브라우저가 무시하고 기본 16px로 동작했으나,
+    // 최신 빌드(lightningcss)는 이를 100px로 정규화해 1rem=100px가 되어 버린다.
+    // 의도한 값(브라우저 기본 16px = pxtorem rootValue와 일치)을 100%로 명시한다.
+    font-size: 100%;
 }
 
 body {
