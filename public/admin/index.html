@@ -9,5 +9,93 @@
   <body>
     <!-- Sveltia CMS (Decap 후신, Lexical 에디터로 CJK/IME 입력 안정) -->
     <script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>
+
+    <!-- 게시 상태 토스트: 저장(Save) 감지 → GitHub Actions 배포 상태를 폴링해 알림.
+         position:fixed 오버레이라 Sveltia 화면 레이아웃에 영향을 주지 않는다. -->
+    <script>
+      (function () {
+        const REPO = 'ybbarng/livvy.byb.kr';
+        const RUNS = `https://api.github.com/repos/${REPO}/actions/runs?branch=main&per_page=1`;
+
+        const toast = document.createElement('div');
+        toast.style.cssText = [
+          'position:fixed', 'bottom:20px', 'right:20px', 'z-index:2147483647',
+          'padding:12px 18px', 'border-radius:24px', 'color:#fff',
+          'font:14px/1.4 -apple-system,BlinkMacSystemFont,"Noto Sans KR",sans-serif',
+          'box-shadow:0 4px 16px rgba(0,0,0,.25)', 'display:none',
+          'max-width:min(360px,90vw)', 'transition:opacity .3s', 'opacity:0',
+        ].join(';');
+        document.body.appendChild(toast);
+
+        let hideTimer = null;
+        function show(text, color, autoHideMs) {
+          clearTimeout(hideTimer);
+          toast.textContent = text;
+          toast.style.background = color;
+          toast.style.display = 'block';
+          requestAnimationFrame(() => (toast.style.opacity = '1'));
+          if (autoHideMs) hideTimer = setTimeout(hide, autoHideMs);
+        }
+        function hide() {
+          toast.style.opacity = '0';
+          setTimeout(() => (toast.style.display = 'none'), 300);
+        }
+
+        const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+        async function latestRun() {
+          try {
+            const r = await fetch(RUNS, { headers: { Accept: 'application/vnd.github+json' } });
+            if (!r.ok) return null;
+            const d = await r.json();
+            return (d.workflow_runs && d.workflow_runs[0]) || null;
+          } catch {
+            return null;
+          }
+        }
+
+        let polling = false;
+        async function pollDeploy() {
+          if (polling) return;
+          polling = true;
+          show('🟡 저장됨 — 게시 준비 중…', '#d97706');
+          const baseline = await latestRun();
+          const baseId = baseline ? baseline.id : null;
+          const started = Date.now();
+          while (Date.now() - started < 6 * 60 * 1000) {
+            await sleep(12000);
+            const run = await latestRun();
+            if (run && run.id !== baseId) {
+              if (run.status !== 'completed') {
+                show('🟡 게시 중… (빌드하고 있어요)', '#d97706');
+              } else if (run.conclusion === 'success') {
+                show('🟢 게시 완료! 잠시 뒤 사이트에 반영돼요', '#059669', 9000);
+                polling = false;
+                return;
+              } else {
+                show('🔴 게시 실패 — 관리자에게 문의하세요', '#dc2626', 12000);
+                polling = false;
+                return;
+              }
+            }
+          }
+          hide();
+          polling = false;
+        }
+
+        // Sveltia의 저장(Save) 버튼 클릭을 감지 (capture 단계)
+        document.addEventListener(
+          'click',
+          (e) => {
+            const btn = e.target && e.target.closest && e.target.closest('button');
+            if (!btn) return;
+            const label = (btn.textContent || '') + ' ' + (btn.getAttribute('aria-label') || '');
+            if (/\bsave\b|저장|publish|발행/i.test(label)) {
+              setTimeout(pollDeploy, 4000); // 커밋이 올라갈 시간을 준 뒤 폴링 시작
+            }
+          },
+          true,
+        );
+      })();
+    </script>
   </body>
 </html>
