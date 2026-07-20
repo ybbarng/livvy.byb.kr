@@ -13,7 +13,15 @@ const { isIndex = false } = Astro.props;
   <div class="sidebar__inner">
     <div class="sidebar__group">
       <a href="/">
-        <Image class="sidebar__group-photo" src={mainPhoto} width={145} height={257} alt={site.group.name} />
+        <Image
+          class="sidebar__group-photo"
+          src={mainPhoto}
+          width={145}
+          height={257}
+          alt={site.group.name}
+          loading="eager"
+          fetchpriority="high"
+        />
       </a>
       {
         isIndex ? (

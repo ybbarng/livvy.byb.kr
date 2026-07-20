@@ -10,7 +10,15 @@ const isActive = (path: string) => current === path;
 
 <nav class="menu">
   <a class="menu__logo" href="/" title="메인 화면으로 가기">
-    <Image class="menu__logo__img" src={logo} width={116} height={45} alt="Y❤️H log" />
+    <Image
+      class="menu__logo__img"
+      src={logo}
+      width={116}
+      height={45}
+      alt="Y❤️H log"
+      loading="eager"
+      fetchpriority="high"
+    />
   </a>
 
   {/* 685px 이하에서 체크박스로 여닫는 순수 CSS 햄버거 (React 의존 제거) */}
