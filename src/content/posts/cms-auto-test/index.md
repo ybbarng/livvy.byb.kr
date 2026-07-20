@@ -1,7 +1,7 @@
 ---
 title: CMS 자동 테스트
 slug: cms-auto-test
-date: 2026-07-21T00:33+09:00
+date: 2026-07-21T00:34+09:00
 author: ybbarng
 category: smalltalk
 tags: []
