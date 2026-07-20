@@ -13,8 +13,9 @@ backend:
 locale: ko
 
 # 이미지 저장 위치(전역). 컬렉션별로 재정의하면 Sveltia가 루트에 저장하는 문제가 있어 전역만 쓴다.
-media_folder: public/uploads # 저장소의 public/uploads/ 에 저장
-public_folder: /uploads # 마크다운엔 /uploads/파일명 으로 삽입 → 빌드 시 그대로 서빙
+# 이미지 저장 위치. media_folder는 반드시 / 로 시작해야 저장소 루트 기준으로 인식된다.
+media_folder: /public/uploads
+public_folder: /uploads
 
 collections:
   - name: posts
