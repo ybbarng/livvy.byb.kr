@@ -1,0 +1,28 @@
+---
+// 가변 폰트(fontsource) — font-display:swap + unicode-range subset 내장.
+// 브라우저가 글자에 맞는 언어 폰트만 자동으로 받는다.
+import '@fontsource-variable/noto-sans';
+import '@fontsource-variable/noto-sans-kr';
+import '@fontsource-variable/noto-sans-jp';
+import '@fontsource-variable/noto-sans-sc';
+import '@fontsource-variable/roboto';
+// 전역 스타일 진입점(기존 Gatsby init.scss 그대로 이식)
+import '../styles/init.scss';
+
+interface Props {
+  title?: string;
+}
+const { title = '현지와 용배의 블로그' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
