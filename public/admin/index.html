@@ -20,13 +20,19 @@
         color: #fff;
         font: 500 13px/1 -apple-system, BlinkMacSystemFont, 'Noto Sans KR', sans-serif;
         white-space: nowrap;
+        overflow: hidden; /* 폭이 줄 때 글자가 감싸지지 않고 깔끔히 잘리도록 */
+        box-sizing: border-box; /* width 에 padding 포함 → 폭 측정/전환 정확 */
         opacity: 0;
-        transition: opacity 0.25s ease, background 0.3s ease;
+        transform: translateX(6px) scale(0.98);
+        /* 1) 나타남/사라짐 fade  2) 문구 길이 바뀔 때 폭  3) 완료 시 배경색 — 모두 부드럽게 */
+        transition: opacity 0.3s ease, transform 0.3s ease, width 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+          background 0.4s ease;
         flex: none;
         align-self: center;
       }
       #deploy-toast.show {
         opacity: 1;
+        transform: translateX(0) scale(1);
       }
       #deploy-toast .dt-icon-wrap {
         display: inline-flex;
@@ -140,22 +146,45 @@
         });
         mo.observe(document.body, { childList: true, subtree: true });
 
+        // 문구를 바꾸면서 폭(width)을 이전 값에서 새 값으로 부드럽게 전환한다.
+        // width:auto 는 전환이 안 되므로, 새 내용의 목표 폭을 재서 픽셀로 고정한다.
+        function setContent(html, firstShow) {
+          const from = toast.offsetWidth; // border-box 기준 현재 폭
+          toast.innerHTML = html;
+          toast.style.width = 'auto';
+          const to = toast.offsetWidth; // 새 내용의 자연 폭
+          if (!to) {
+            // 아직 앱바에 안 붙어 폭을 못 재면 자연 폭에 맡긴다
+            toast.style.width = '';
+            return;
+          }
+          if (!firstShow && from > 0) {
+            toast.style.width = from + 'px';
+            void toast.offsetWidth; // 강제 reflow 로 'from' 을 확정한 뒤
+            toast.style.width = to + 'px'; // 'to' 로 전환(width transition 발동)
+          } else {
+            toast.style.width = to + 'px';
+          }
+        }
+
         let hideTimer = null;
         function render(icon, text, bg, opts = {}) {
           clearTimeout(hideTimer);
-          toast.innerHTML = icon + '<span>' + text + '</span>';
-          toast.style.background = bg;
-          toast.classList.toggle('done', !!opts.pop);
+          const firstShow = toast.style.display === 'none' || !toast.classList.contains('show');
           toast.style.display = 'flex';
           mount();
+          setContent(icon + '<span>' + text + '</span>', firstShow);
+          toast.style.background = bg;
+          toast.classList.toggle('done', !!opts.pop);
           requestAnimationFrame(() => toast.classList.add('show'));
           if (opts.autoHide) hideTimer = setTimeout(hide, opts.autoHide);
         }
         function hide() {
-          toast.classList.remove('show');
+          toast.classList.remove('show'); // opacity·transform 전환으로 서서히 사라짐
           setTimeout(() => {
             toast.style.display = 'none';
-          }, 260);
+            toast.style.width = ''; // 다음 등장 때 폭을 새로 재도록 초기화
+          }, 340);
         }
 
         const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
