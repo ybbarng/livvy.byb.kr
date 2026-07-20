@@ -5,40 +5,125 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex" />
     <title>콘텐츠 관리 · 현지와 용배의 블로그</title>
+    <style>
+      /* 게시 상태 토스트 — 데스크톱은 우상단 avatar 왼쪽, 모바일은 우상단.
+         position:fixed 오버레이라 Sveltia 레이아웃에 영향을 주지 않는다. */
+      #deploy-toast {
+        position: fixed;
+        top: 9px;
+        right: 56px; /* 우상단 avatar 아이콘 왼쪽의 여유 공간 */
+        z-index: 2147483647;
+        display: none;
+        align-items: center;
+        gap: 7px;
+        height: 30px;
+        padding: 0 13px 0 9px;
+        border-radius: 16px;
+        color: #fff;
+        font: 500 13px/1 -apple-system, BlinkMacSystemFont, 'Noto Sans KR', sans-serif;
+        white-space: nowrap;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
+        opacity: 0;
+        transform: translateY(-4px);
+        transition: opacity 0.25s ease, transform 0.25s ease, background 0.3s ease;
+      }
+      #deploy-toast.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      @media (max-width: 767px) {
+        #deploy-toast {
+          top: 8px;
+          right: 8px;
+        }
+      }
+      /* 진행 중 스피너(throbber) */
+      #deploy-toast .dt-spin {
+        width: 15px;
+        height: 15px;
+        border: 2px solid rgba(255, 255, 255, 0.35);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: dt-spin 0.7s linear infinite;
+        flex: none;
+      }
+      @keyframes dt-spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      /* 완료 체크(그려지는 애니메이션) */
+      #deploy-toast .dt-check {
+        width: 17px;
+        height: 17px;
+        flex: none;
+      }
+      #deploy-toast .dt-check circle {
+        opacity: 0.35;
+      }
+      #deploy-toast .dt-check path {
+        stroke-dasharray: 1;
+        stroke-dashoffset: 1;
+        animation: dt-draw 0.45s 0.05s ease forwards;
+      }
+      @keyframes dt-draw {
+        to {
+          stroke-dashoffset: 0;
+        }
+      }
+      #deploy-toast.done {
+        animation: dt-pop 0.35s ease;
+      }
+      @keyframes dt-pop {
+        0% {
+          transform: scale(0.92);
+        }
+        60% {
+          transform: scale(1.04);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+    </style>
   </head>
   <body>
     <!-- Sveltia CMS (Decap 후신, Lexical 에디터로 CJK/IME 입력 안정) -->
     <script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>
 
-    <!-- 게시 상태 토스트: 저장(Save) 감지 → GitHub Actions 배포 상태를 폴링해 알림.
-         position:fixed 오버레이라 Sveltia 화면 레이아웃에 영향을 주지 않는다. -->
     <script>
       (function () {
         const REPO = 'ybbarng/livvy.byb.kr';
         const RUNS = `https://api.github.com/repos/${REPO}/actions/runs?branch=main&per_page=1`;
 
+        const SPIN = '<span class="dt-spin"></span>';
+        const CHECK =
+          '<svg class="dt-check" viewBox="0 0 24 24" fill="none">' +
+          '<circle cx="12" cy="12" r="11" stroke="#fff" stroke-width="2"/>' +
+          '<path d="M6.5 12.5l3.5 3.5 7.5-8" stroke="#fff" stroke-width="2.5" ' +
+          'stroke-linecap="round" stroke-linejoin="round" pathLength="1"/></svg>';
+        const CROSS =
+          '<svg class="dt-check" viewBox="0 0 24 24" fill="none">' +
+          '<circle cx="12" cy="12" r="11" stroke="#fff" stroke-width="2"/>' +
+          '<path d="M8 8l8 8M16 8l-8 8" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/></svg>';
+
         const toast = document.createElement('div');
-        toast.style.cssText = [
-          'position:fixed', 'bottom:20px', 'right:20px', 'z-index:2147483647',
-          'padding:12px 18px', 'border-radius:24px', 'color:#fff',
-          'font:14px/1.4 -apple-system,BlinkMacSystemFont,"Noto Sans KR",sans-serif',
-          'box-shadow:0 4px 16px rgba(0,0,0,.25)', 'display:none',
-          'max-width:min(360px,90vw)', 'transition:opacity .3s', 'opacity:0',
-        ].join(';');
+        toast.id = 'deploy-toast';
         document.body.appendChild(toast);
 
         let hideTimer = null;
-        function show(text, color, autoHideMs) {
+        function render(icon, text, bg, opts = {}) {
           clearTimeout(hideTimer);
-          toast.textContent = text;
-          toast.style.background = color;
-          toast.style.display = 'block';
-          requestAnimationFrame(() => (toast.style.opacity = '1'));
-          if (autoHideMs) hideTimer = setTimeout(hide, autoHideMs);
+          toast.innerHTML = icon + '<span>' + text + '</span>';
+          toast.style.background = bg;
+          toast.classList.toggle('done', !!opts.pop);
+          toast.style.display = 'flex';
+          requestAnimationFrame(() => toast.classList.add('show'));
+          if (opts.autoHide) hideTimer = setTimeout(hide, opts.autoHide);
         }
         function hide() {
-          toast.style.opacity = '0';
-          setTimeout(() => (toast.style.display = 'none'), 300);
+          toast.classList.remove('show');
+          setTimeout(() => (toast.style.display = 'none'), 260);
         }
 
         const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -57,7 +142,7 @@
         async function pollDeploy() {
           if (polling) return;
           polling = true;
-          show('🟡 저장됨 — 게시 준비 중…', '#d97706');
+          render(SPIN, '저장됨 — 게시 준비 중…', '#475569');
           const baseline = await latestRun();
           const baseId = baseline ? baseline.id : null;
           const started = Date.now();
@@ -66,13 +151,13 @@
             const run = await latestRun();
             if (run && run.id !== baseId) {
               if (run.status !== 'completed') {
-                show('🟡 게시 중… (빌드하고 있어요)', '#d97706');
+                render(SPIN, '게시 중… 빌드하고 있어요', '#475569');
               } else if (run.conclusion === 'success') {
-                show('🟢 게시 완료! 잠시 뒤 사이트에 반영돼요', '#059669', 9000);
+                render(CHECK, '게시 완료! 곧 반영돼요', '#059669', { pop: true, autoHide: 9000 });
                 polling = false;
                 return;
               } else {
-                show('🔴 게시 실패 — 관리자에게 문의하세요', '#dc2626', 12000);
+                render(CROSS, '게시 실패 — 확인이 필요해요', '#dc2626', { autoHide: 12000 });
                 polling = false;
                 return;
               }
@@ -82,7 +167,7 @@
           polling = false;
         }
 
-        // Sveltia의 저장(Save) 버튼 클릭을 감지 (capture 단계)
+        // Sveltia 저장(Save) 버튼 클릭 감지 (capture 단계)
         document.addEventListener(
           'click',
           (e) => {
@@ -90,7 +175,7 @@
             if (!btn) return;
             const label = (btn.textContent || '') + ' ' + (btn.getAttribute('aria-label') || '');
             if (/\bsave\b|저장|publish|발행/i.test(label)) {
-              setTimeout(pollDeploy, 4000); // 커밋이 올라갈 시간을 준 뒤 폴링 시작
+              setTimeout(pollDeploy, 4000);
             }
           },
           true,
