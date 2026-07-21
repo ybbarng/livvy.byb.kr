@@ -25,7 +25,7 @@ const { title, slug, date, author, category, description } = post.data;
   <h2 class="post__title">
     <a class="post__title-link" href={postPath(slug)}>{title}</a>
   </h2>
-  {description && <div class="post__description">{description}</div>}
+  {description?.trim() && <div class="post__description">{description}</div>}
   <a class="post__readmore" href={postPath(slug)}>Read</a>
 </div>
 
@@ -35,6 +35,24 @@ const { title, slug, date, author, category, description } = post.data;
 
   .post {
     @include margin-bottom(1.25);
+    position: relative;
+
+    // 목록 항목에 마우스를 올리면 은은한 배경 하이라이트(레이아웃에 영향 없는 가상요소)
+    &::before {
+      content: '';
+      position: absolute;
+      inset: -10px -14px;
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.025);
+      opacity: 0;
+      transition: opacity 0.15s ease;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    &:hover::before {
+      opacity: 1;
+    }
 
     &:last-child {
       @include margin-bottom(.5);

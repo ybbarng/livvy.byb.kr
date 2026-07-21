@@ -1,7 +1,7 @@
 ---
 import { render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { authorPath, tagPath } from '../../lib/path';
+import { postPath, authorPath, tagPath } from '../../lib/path';
 import { koreanDate } from '../../lib/date';
 import { authorName } from '../../config/site';
 import { getPublishedPosts } from '../../lib/content';
@@ -9,22 +9,36 @@ import Giscus from '../../components/Giscus.astro';
 import DisqusArchive from '../../components/DisqusArchive.astro';
 
 export async function getStaticPaths() {
-  const posts = await getPublishedPosts();
-  return posts.map((post) => ({
+  const posts = await getPublishedPosts(); // 최신순 정렬
+  return posts.map((post, i) => ({
     params: { slug: post.data.slug },
-    props: { post },
+    props: {
+      post,
+      newer: posts[i - 1] ?? null, // 더 최근에 쓴 글(다음 글)
+      older: posts[i + 1] ?? null, // 더 예전에 쓴 글(이전 글)
+    },
   }));
 }
 
-const { post } = Astro.props;
+const { post, newer, older } = Astro.props;
 const { Content } = await render(post);
 const { title, date, author, tags, description } = post.data;
+
+// 읽는 시간 추정: 마크다운 기호·코드·이미지를 걷어낸 글자 수 기준(한국어 ~500자/분)
+const plainText = post.body
+  .replace(/```[\s\S]*?```/g, '')
+  .replace(/!\[[^\]]*\]\([^)]*\)/g, '')
+  .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+  .replace(/[#>*_`~\-[\]()]/g, '');
+const charCount = plainText.replace(/\s/g, '').length;
+const readingMinutes = Math.max(1, Math.round(charCount / 500));
 ---
 
 <BaseLayout title={title} description={description}>
   <div class="post-single">
     <div class="post-single__inner">
       <h1 class="post-single__title">{title}</h1>
+      <p class="post-single__readtime">약 {readingMinutes}분 읽기</p>
       <div class="post-single__body">
         <Content />
       </div>
@@ -51,9 +65,83 @@ const { title, date, author, tags, description } = post.data;
           </div>
         )
       }
+      {
+        (older || newer) && (
+          <nav class="post-nav" aria-label="다른 글로 이동">
+            <div class="post-nav__side post-nav__side--prev">
+              {older && (
+                <a class="post-nav__link" href={postPath(older.data.slug)}>
+                  <span class="post-nav__label">← 이전 글</span>
+                  <span class="post-nav__title">{older.data.title}</span>
+                </a>
+              )}
+            </div>
+            <div class="post-nav__side post-nav__side--next">
+              {newer && (
+                <a class="post-nav__link" href={postPath(newer.data.slug)}>
+                  <span class="post-nav__label">다음 글 →</span>
+                  <span class="post-nav__title">{newer.data.title}</span>
+                </a>
+              )}
+            </div>
+          </nav>
+        )
+      }
       <hr />
       <DisqusArchive slug={post.data.slug} />
       <Giscus />
     </div>
   </div>
 </BaseLayout>
+
+<style lang="scss">
+  @import '../../styles/variables';
+  @import '../../styles/mixins';
+
+  .post-single__readtime {
+    color: $color-gray;
+    font-size: $typographic-small-font-size;
+    @include margin-top(0);
+    @include margin-bottom(0.5);
+  }
+
+  .post-nav {
+    max-width: $layout-post-single-width;
+    margin: 0 auto;
+    @include margin-top(1);
+    display: flex;
+    gap: 16px;
+
+    &__side {
+      flex: 1;
+      min-width: 0;
+
+      &--next {
+        text-align: right;
+      }
+    }
+
+    &__link {
+      display: inline-flex;
+      flex-direction: column;
+      gap: 3px;
+      max-width: 100%;
+    }
+
+    &__label {
+      font-size: $typographic-small-font-size;
+      color: $color-gray;
+    }
+
+    &__title {
+      color: $color-base;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    &__link:hover &__title {
+      color: $color-primary;
+    }
+  }
+</style>

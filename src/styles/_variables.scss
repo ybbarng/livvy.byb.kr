@@ -8,7 +8,7 @@ $color-primary: #5d93ff;
 $color-secondary: #f7a046;
 
 $color-white: lighten($color-base, 100%);
-$color-gray: lighten($color-base, 16%);  // #888888
+$color-gray: lighten($color-base, 8%);  // #737373 — 보조 텍스트(대비 개선, WCAG AA 통과)
 $color-gray-border: lighten($color-base, 53%);  // #e6e6e6
 $color-gray-bg: lighten($color-base, 55%);  // #ebebeb
 
