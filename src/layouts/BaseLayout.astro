@@ -101,6 +101,28 @@ const twitterCard = ogImageProp ? 'summary_large_image' : 'summary';
         <Copyright />
       </div>
     </div>
+    <script>
+      // 유튜브 facade 클릭 → 실제 재생 iframe(youtube-nocookie)으로 교체.
+      // 이벤트 위임이라 View Transitions 로 페이지가 바뀌어도 한 번만 등록되면 된다.
+      document.addEventListener('click', (e) => {
+        const target = e.target;
+        if (!(target instanceof Element)) return;
+        const btn = target.closest('.yt-embed__btn');
+        if (!btn) return;
+        const wrap = btn.closest('.yt-embed');
+        const id = wrap?.getAttribute('data-yt-id');
+        if (!wrap || !id) return;
+        const iframe = document.createElement('iframe');
+        iframe.className = 'yt-embed__iframe';
+        iframe.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`;
+        iframe.title = '유튜브 영상';
+        iframe.loading = 'lazy';
+        iframe.allow =
+          'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+        iframe.allowFullscreen = true;
+        wrap.replaceChildren(iframe);
+      });
+    </script>
   </body>
 </html>
 

@@ -220,6 +220,63 @@ figcaption {
     }
 }
 
+// 유튜브 embed(remark-youtube): 반응형 16:9 + 클릭 전 썸네일 facade
+.yt-embed {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    max-width: 100%;
+    margin: 1.5rem auto;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #000;
+}
+
+.yt-embed__btn {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+}
+
+.yt-embed__thumb {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    object-fit: cover;
+    display: block;
+}
+
+.yt-embed__play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0.85;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.yt-embed__play-bg {
+    fill: #f00;
+}
+
+.yt-embed__btn:hover .yt-embed__play,
+.yt-embed__btn:focus-visible .yt-embed__play {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.08);
+}
+
+.yt-embed__iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
 // 애니메이션 최소화를 선호하는 사용자는 전환·애니메이션을 끈다(접근성)
 @media (prefers-reduced-motion: reduce) {
     *,
