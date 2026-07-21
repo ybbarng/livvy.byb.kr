@@ -17,6 +17,7 @@
   --c-secondary: #f7a046; // 보조 포인트(주황)
 
   color-scheme: light;
+  interpolate-size: allow-keywords; // height:auto 등 키워드 크기 전환 허용(펼침 애니메이션)
 }
 
 :root[data-theme='dark'] {

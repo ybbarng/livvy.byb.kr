@@ -63,10 +63,8 @@ const isActive = (path: string) => current === path;
 
 <script>
   // 테마 토글: data-theme 전환 + localStorage 저장 + giscus 테마 동기화
-  const btn = document.getElementById('theme-toggle');
   const root = document.documentElement;
-  const giscusTheme = () =>
-    root.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+  const giscusTheme = () => (root.getAttribute('data-theme') === 'dark' ? 'dark' : 'light');
   const syncGiscus = () => {
     const frame = document.querySelector('iframe.giscus-frame');
     if (frame instanceof HTMLIFrameElement && frame.contentWindow) {
@@ -76,16 +74,22 @@ const isActive = (path: string) => current === path;
       );
     }
   };
-  btn?.addEventListener('click', () => {
+
+  // 이벤트 위임: 버튼이 페이지 전환(View Transitions)마다 새로 그려져도
+  // document 리스너 하나로 처리 → 재부착이 필요 없어 견고하다.
+  document.addEventListener('click', (e) => {
+    const el = e.target;
+    if (!(el instanceof Element) || !el.closest('#theme-toggle')) return;
     const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
     if (next === 'dark') root.setAttribute('data-theme', 'dark');
     else root.removeAttribute('data-theme');
     try {
       localStorage.setItem('theme', next);
-    } catch (e) {}
+    } catch (err) {}
     syncGiscus();
   });
-  // giscus 가 로드되면 현재 테마로 맞춘다
+
+  // giscus 가 로드되면 현재 테마로 맞춘다(문서 레벨, 한 번만 등록)
   window.addEventListener('message', (e) => {
     if (e.origin === 'https://giscus.app' && e.data?.giscus) syncGiscus();
   });
@@ -195,15 +199,20 @@ const isActive = (path: string) => current === path;
         }
       }
 
-      // 작은 화면: 기본 접힘, 체크 시 세로로 펼침
+      // 작은 화면: 기본 접힘, 체크 시 세로로 펼침(부드럽게 슬라이드·페이드)
       &__list {
-        display: none;
+        display: flex;
         flex-direction: column;
         position: absolute;
         top: $header-height;
         left: 0;
         right: 0;
         background: $color-white;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-8px);
+        pointer-events: none;
+        transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
 
         &-item-link {
           background-color: $color-white;
@@ -231,7 +240,10 @@ const isActive = (path: string) => current === path;
       }
 
       &__checkbox:checked ~ &__list {
-        display: flex;
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+        pointer-events: auto;
       }
     }
 

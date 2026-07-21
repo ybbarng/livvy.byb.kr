@@ -28,8 +28,10 @@ const items = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
 
 <script>
   // 스크롤 위치에 따라 현재 섹션을 목차에서 강조한다.
-  const links = Array.from(document.querySelectorAll('[data-toc]'));
-  if (links.length > 0) {
+  // View Transitions로 페이지가 바뀌어도 매번 다시 설정한다.
+  function setupToc() {
+    const links = Array.from(document.querySelectorAll('[data-toc]'));
+    if (links.length === 0) return;
     const setActive = (id: string) => {
       for (const l of links) {
         l.classList.toggle('is-active', l.getAttribute('data-toc') === id);
@@ -50,6 +52,7 @@ const items = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
       }
     }
   }
+  document.addEventListener('astro:page-load', setupToc);
 </script>
 
 <style lang="scss">
@@ -89,5 +92,16 @@ const items = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
         color: $color-primary;
       }
     }
+  }
+
+  // 펼침/접힘 부드럽게 (::details-content 지원 브라우저에서 높이 전환, 그 외엔 즉시)
+  .toc::details-content {
+    block-size: 0;
+    overflow: hidden;
+    transition: block-size 0.28s ease;
+  }
+
+  .toc[open]::details-content {
+    block-size: auto;
   }
 </style>
