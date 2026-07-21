@@ -38,10 +38,7 @@ const isActive = (path: string) => current === path;
         </li>
       ))
     }
-    <li class="menu__list-item menu__list-item-login">
-      <a class="menu__list-item-link" href="/admin/" title="글쓰기 · 편집">Login</a>
-    </li>
-    <li class="menu__list-item menu__list-item-theme">
+    <li class="menu__list-item menu__actions">
       <button
         type="button"
         id="theme-toggle"
@@ -58,6 +55,8 @@ const isActive = (path: string) => current === path;
           <span class="theme-label">라이트모드</span>
         </span>
       </button>
+      <a class="menu__list-item-link" href="/guide/">작성 가이드</a>
+      <a class="menu__list-item-link" href="/admin/" title="글쓰기 · 편집">Login</a>
     </li>
   </ul>
 </nav>
@@ -133,11 +132,16 @@ const isActive = (path: string) => current === path;
         }
       }
 
-      &-item-login {
-        position: absolute;
-        top: 0;
-        right: 0;
-      }
+    }
+
+    // 오른쪽 액션 그룹: [테마][작성 가이드][Login] — 데스크톱 우측 정렬.
+    // (가운데 .menu__list 는 Home+카테고리만 남아 중앙 정렬됨)
+    &__actions {
+      position: absolute;
+      top: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
     }
 
     &__logo {
@@ -217,10 +221,13 @@ const isActive = (path: string) => current === path;
             border-bottom: none;
           }
         }
+      }
 
-        &-item-login {
-          position: relative;
-        }
+      // 오른쪽 액션 그룹: 모바일에선 드롭다운 안에 세로로 정렬
+      &__actions {
+        position: static;
+        flex-direction: column;
+        align-items: stretch;
       }
 
       &__checkbox:checked ~ &__list {
@@ -286,16 +293,13 @@ const isActive = (path: string) => current === path;
     }
   }
 
-  // 모바일: 다른 메뉴 항목처럼 가운데 정렬 + 라벨 표시
+  // 모바일: 토글도 다른 항목처럼 전체폭·가운데 + 라벨 표시
   @media (max-width: 685px) {
-    .menu__list-item-theme {
-      text-align: center;
-    }
-
     .menu__theme-toggle {
       width: 100%;
       justify-content: center;
       padding: 0;
+      height: $header-height;
     }
 
     .theme-label {

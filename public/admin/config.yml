@@ -40,7 +40,7 @@ collections:
           name: slug,
           label: 'slug (URL 주소)',
           widget: string,
-          hint: 'URL이 되는 값입니다. 한글 가능, 공백 대신 하이픈(-)을 쓰세요. 예: 놀러-가고-싶다',
+          hint: 'URL이 되는 값입니다. 영어 소문자·숫자·하이픈(-)으로만 쓰세요(한글은 주소가 지저분해져요). 예: hello-world',
         }
       - {
           name: date,
