@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <rect width="64" height="64" rx="13" fill="#ffffff"/>
+  <!-- Y (용배) — 보라 -->
+  <path d="M6 13 L15 28 L24 13 M15 28 L15 51" fill="none" stroke="#9b3fc9"
+        stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- 하트 (사랑) — 빨강 -->
+  <path d="M32 42 C 26.8 37.5, 23.8 35, 23.8 31 C 23.8 28.2, 25.9 26.4, 28.2 26.4
+           C 30.1 26.4, 31.3 27.6, 32 28.9 C 32.7 27.6, 33.9 26.4, 35.8 26.4
+           C 38.1 26.4, 40.2 28.2, 40.2 31 C 40.2 35, 37.2 37.5, 32 42 Z" fill="#e63c5e"/>
+  <!-- H (현지) — 진회색 -->
+  <path d="M40 13 L40 51 M58 13 L58 51 M40 32 L58 32" fill="none" stroke="#333333"
+        stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
