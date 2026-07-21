@@ -19,8 +19,9 @@ import ogImage from '../assets/images/blog_logo_og.png';
 interface Props {
   title?: string;
   description?: string;
+  noindex?: boolean;
 }
-const { title = site.title, description = site.subtitle } = Astro.props;
+const { title = site.title, description = site.subtitle, noindex = false } = Astro.props;
 const fullTitle = title === site.title ? title : `${title} - ${site.title}`;
 const ogImageUrl = new URL(ogImage.src, Astro.site).href;
 ---
@@ -30,6 +31,7 @@ const ogImageUrl = new URL(ogImage.src, Astro.site).href;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
     <script is:inline>
       // 다크모드: 렌더 전에 저장된/OS 선호 테마를 적용해 깜빡임을 막는다.
       (function () {

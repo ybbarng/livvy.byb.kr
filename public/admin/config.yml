@@ -87,7 +87,7 @@ collections:
           name: body,
           label: 본문,
           widget: markdown,
-          hint: '이미지는 툴바의 이미지 버튼을 눌러 Browse로 첨부하세요. (끌어다 놓기는 현재 이미지가 엉뚱한 곳에 저장되는 문제가 있습니다)',
+          hint: '이미지는 툴바의 이미지 버튼(Browse)으로 첨부. 후리가나·병음 등 문법은 글쓰기 가이드 참고 → https://livvy.byb.kr/guide/',
         }
 
   - name: pages
