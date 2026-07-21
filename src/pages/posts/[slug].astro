@@ -25,7 +25,7 @@ const { Content } = await render(post);
 const { title, date, author, tags, description } = post.data;
 
 // 읽는 시간 추정: 마크다운 기호·코드·이미지를 걷어낸 글자 수 기준(한국어 ~500자/분)
-const plainText = post.body
+const plainText = (post.body ?? '')
   .replace(/```[\s\S]*?```/g, '')
   .replace(/!\[[^\]]*\]\([^)]*\)/g, '')
   .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')

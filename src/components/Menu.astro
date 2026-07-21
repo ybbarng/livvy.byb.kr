@@ -69,7 +69,7 @@ const isActive = (path: string) => current === path;
     root.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
   const syncGiscus = () => {
     const frame = document.querySelector('iframe.giscus-frame');
-    if (frame && frame.contentWindow) {
+    if (frame instanceof HTMLIFrameElement && frame.contentWindow) {
       frame.contentWindow.postMessage(
         { giscus: { setConfig: { theme: giscusTheme() } } },
         'https://giscus.app',
