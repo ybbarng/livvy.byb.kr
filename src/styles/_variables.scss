@@ -2,15 +2,16 @@
  * Variables
  */
 
-// Colors
-$color-base: #5f5f5f;
-$color-primary: #5d93ff;
-$color-secondary: #f7a046;
+// Colors — 실제 값은 styles/_theme.scss 의 CSS 변수(:root / [data-theme=dark])에 있다.
+// 런타임 다크모드 전환을 위해 SCSS 정적 색 대신 CSS 커스텀 속성을 참조한다.
+$color-base: var(--c-text);
+$color-primary: var(--c-primary);
+$color-secondary: var(--c-secondary);
 
-$color-white: lighten($color-base, 100%);
-$color-gray: lighten($color-base, 8%);  // #737373 — 보조 텍스트(대비 개선, WCAG AA 통과)
-$color-gray-border: lighten($color-base, 53%);  // #e6e6e6
-$color-gray-bg: lighten($color-base, 55%);  // #ebebeb
+$color-white: var(--c-bg); // '흰 배경'은 다크모드에서 어두운 배경이 된다
+$color-gray: var(--c-text-muted); // 보조 텍스트
+$color-gray-border: var(--c-border);
+$color-gray-bg: var(--c-surface);
 
 // Typographic
 // fontsource 가변 폰트의 실제 font-family 이름을 쓴다("... Variable").

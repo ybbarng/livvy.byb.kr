@@ -41,8 +41,50 @@ const isActive = (path: string) => current === path;
     <li class="menu__list-item menu__list-item-login">
       <a class="menu__list-item-link" href="/admin/" title="글쓰기 · 편집">Login</a>
     </li>
+    <li class="menu__list-item menu__list-item-theme">
+      <button
+        type="button"
+        id="theme-toggle"
+        class="menu__theme-toggle"
+        aria-label="라이트/다크 모드 전환"
+        title="라이트/다크 모드 전환"
+      >
+        <svg class="theme-icon theme-icon--moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" /></svg>
+        <svg class="theme-icon theme-icon--sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5" /><path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4" /></svg>
+      </button>
+    </li>
   </ul>
 </nav>
+
+<script>
+  // 테마 토글: data-theme 전환 + localStorage 저장 + giscus 테마 동기화
+  const btn = document.getElementById('theme-toggle');
+  const root = document.documentElement;
+  const giscusTheme = () =>
+    root.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+  const syncGiscus = () => {
+    const frame = document.querySelector('iframe.giscus-frame');
+    if (frame && frame.contentWindow) {
+      frame.contentWindow.postMessage(
+        { giscus: { setConfig: { theme: giscusTheme() } } },
+        'https://giscus.app',
+      );
+    }
+  };
+  btn?.addEventListener('click', () => {
+    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    if (next === 'dark') root.setAttribute('data-theme', 'dark');
+    else root.removeAttribute('data-theme');
+    try {
+      localStorage.setItem('theme', next);
+    } catch (e) {}
+    syncGiscus();
+  });
+  // giscus 가 로드되면 현재 테마로 맞춘다
+  window.addEventListener('message', (e) => {
+    if (e.origin === 'https://giscus.app' && e.data?.giscus) syncGiscus();
+  });
+</script>
 
 <style lang="scss">
   @import '../styles/variables';
@@ -160,12 +202,12 @@ const isActive = (path: string) => current === path;
 
           &:hover,
           &:focus {
-            background-color: lighten($color-primary, 25%);
+            background-color: var(--c-primary-soft);
             border-bottom: none;
           }
 
           &--active {
-            background-color: darken($color-white, 5%);
+            background-color: var(--c-surface);
             border-bottom: none;
           }
         }
@@ -191,6 +233,38 @@ const isActive = (path: string) => current === path;
       margin: 0 auto;
       content: "";
       height: 1px;
+    }
+
+    // 다크모드 토글 버튼
+    &__theme-toggle {
+      background: none;
+      border: 0;
+      cursor: pointer;
+      color: $color-base;
+      height: $header-height;
+      padding: 0 12px;
+      display: inline-flex;
+      align-items: center;
+      line-height: 0;
+
+      &:hover,
+      &:focus {
+        color: $color-primary;
+      }
+    }
+  }
+
+  // 라이트=달 아이콘(누르면 다크로), 다크=해 아이콘(누르면 라이트로)
+  .theme-icon--sun {
+    display: none;
+  }
+
+  :global(html[data-theme='dark']) {
+    .theme-icon--moon {
+      display: none;
+    }
+    .theme-icon--sun {
+      display: inline-flex;
     }
   }
 </style>

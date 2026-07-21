@@ -12,6 +12,8 @@ html {
 body {
     font-family: $typographic-font-family;
     color: $typographic-base-font-color;
+    background-color: $color-white; // 다크모드에서 어두운 배경(var --c-bg)
+    transition: background-color 0.2s ease, color 0.2s ease;
     line-height: $typographic-base-line-height;
     font-size: $typographic-base-font-size;
     -ms-text-size-adjust: 100%;

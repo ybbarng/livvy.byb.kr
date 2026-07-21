@@ -89,13 +89,13 @@
                     text-decoration: none;
                     border: 0;
                     border-radius: 3px;
-                    color: darken($color-base, 4%);  // #555555
+                    color: var(--c-text);
                     line-height: $typographic-base-line-height;
                     padding: 8px 16px;
                     &:hover,
                     &:focus {
                         color: $color-base;
-                        background: darken($color-gray-bg, 5%);
+                        background: var(--c-surface-2);
                         border: 0;
                     }
                 }
