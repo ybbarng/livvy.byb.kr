@@ -1,5 +1,5 @@
-import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
+import { defineConfig } from 'astro/config';
 import expressiveCode from 'astro-expressive-code';
 import pxtorem from 'postcss-pxtorem';
 import remarkRuby from './plugins/remark-ruby.mjs';

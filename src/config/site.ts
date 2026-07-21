@@ -23,7 +23,9 @@ export interface Category {
 const COPYRIGHT_START_YEAR = 2017;
 const currentYear = new Date().getFullYear();
 const copyrightYears =
-  currentYear > COPYRIGHT_START_YEAR ? `${COPYRIGHT_START_YEAR}–${currentYear}` : `${COPYRIGHT_START_YEAR}`;
+  currentYear > COPYRIGHT_START_YEAR
+    ? `${COPYRIGHT_START_YEAR}–${currentYear}`
+    : `${COPYRIGHT_START_YEAR}`;
 
 export const site = {
   url: 'https://livvy.byb.kr',

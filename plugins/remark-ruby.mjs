@@ -18,8 +18,8 @@ export default function remarkRuby() {
       const value = node.value;
       const children = [];
       let last = 0;
-      let m;
-      while ((m = RUBY_RE.exec(value)) !== null) {
+      let m = RUBY_RE.exec(value);
+      while (m !== null) {
         if (m.index > last) children.push({ type: 'text', value: value.slice(last, m.index) });
         const base = m[1];
         const reading = m[2];
@@ -28,6 +28,7 @@ export default function remarkRuby() {
           value: `<ruby>${base}<rp>(</rp><rt>${reading}</rt><rp>)</rp></ruby>`,
         });
         last = m.index + m[0].length;
+        m = RUBY_RE.exec(value);
       }
       if (last < value.length) children.push({ type: 'text', value: value.slice(last) });
 

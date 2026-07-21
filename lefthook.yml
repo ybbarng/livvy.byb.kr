@@ -1,0 +1,14 @@
+# Git hooks (lefthook) — 커밋/푸시 전에 Biome 린트·포맷
+# 설치: pnpm install (prepare 스크립트가 자동 실행) 또는 pnpm exec lefthook install
+
+pre-commit:
+  commands:
+    biome:
+      glob: "*.{js,mjs,cjs,ts,json,jsonc}"
+      run: pnpm exec biome check --write --no-errors-on-unmatched --files-ignore-unknown=true {staged_files}
+      stage_fixed: true
+
+pre-push:
+  commands:
+    biome:
+      run: pnpm exec biome check .

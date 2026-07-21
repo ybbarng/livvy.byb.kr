@@ -7,13 +7,17 @@
 function wallClock(raw: string): Date {
   const abs = new Date(raw);
   const m = raw.match(/([+-])(\d{2}):?(\d{2})$/);
-  const offsetMin = m ? (m[1] === '-' ? -1 : 1) * (parseInt(m[2], 10) * 60 + parseInt(m[3], 10)) : 0;
+  const offsetMin = m
+    ? (m[1] === '-' ? -1 : 1) * (parseInt(m[2], 10) * 60 + parseInt(m[3], 10))
+    : 0;
   return new Date(abs.getTime() + offsetMin * 60000);
 }
 
 // 'MMMM YYYY' — 예: "February 2019" (목록 메타, Roboto 대문자)
 export const monthYear = (raw: string) =>
-  new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(wallClock(raw));
+  new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(
+    wallClock(raw),
+  );
 
 // 'YYYY년 MM월 DD일' — 예: "2018년 12월 02일" (글 상세 푸터)
 export const koreanDate = (raw: string) => {
