@@ -2,8 +2,8 @@ import sitemap from '@astrojs/sitemap';
 import { defineConfig } from 'astro/config';
 import expressiveCode from 'astro-expressive-code';
 import pxtorem from 'postcss-pxtorem';
+import remarkEmbed from './plugins/remark-embed.mjs';
 import remarkRuby from './plugins/remark-ruby.mjs';
-import remarkYoutube from './plugins/remark-youtube.mjs';
 
 // 폰트 로딩 시 밀림(FOUT)·스크롤 위치 튐 방지:
 // 밀림의 주범인 무거운 한글(CJK) 폰트만 font-display: optional 로 바꾼다.
@@ -67,7 +67,7 @@ export default defineConfig({
     // 코드 블록은 Expressive Code(위 integrations)가 처리한다.
     syntaxHighlight: false,
     // 후리가나·병음 루비: {한자|읽기} → <ruby>
-    remarkPlugins: [remarkRuby, remarkYoutube],
+    remarkPlugins: [remarkRuby, remarkEmbed],
     smartypants: true,
   },
   vite: {

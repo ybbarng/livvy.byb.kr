@@ -122,6 +122,25 @@ const twitterCard = ogImageProp ? 'summary_large_image' : 'summary';
         iframe.allowFullscreen = true;
         wrap.replaceChildren(iframe);
       });
+
+      // 트위터/X 위젯: 트윗이 있는 페이지에서만 스크립트를 불러오고,
+      // 화면 전환(View Transitions) 때마다 새 트윗을 다시 렌더한다.
+      function loadTweets() {
+        if (!document.querySelector('.twitter-tweet')) return;
+        // biome-ignore lint/suspicious/noExplicitAny: twttr 는 외부 스크립트가 주입하는 전역
+        const w = window as any;
+        if (w.twttr?.widgets) {
+          w.twttr.widgets.load();
+          return;
+        }
+        if (document.getElementById('twitter-wjs')) return;
+        const s = document.createElement('script');
+        s.id = 'twitter-wjs';
+        s.src = 'https://platform.twitter.com/widgets.js';
+        s.async = true;
+        document.head.appendChild(s);
+      }
+      document.addEventListener('astro:page-load', loadTweets);
     </script>
   </body>
 </html>
