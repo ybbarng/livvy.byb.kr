@@ -3,6 +3,8 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+  schedule:
+    - cron: "0 0 1 * *" # 매월 1일 00:00 UTC — 저작권 연도 등 자동 갱신 위해 재빌드
   workflow_dispatch:
 
 permissions:
