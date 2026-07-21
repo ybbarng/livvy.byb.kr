@@ -1,0 +1,93 @@
+---
+// 글의 h2·h3 로 목차를 만들고, 스크롤 위치에 따라 현재 섹션을 강조한다.
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+const { headings } = Astro.props as { headings: Heading[] };
+const items = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
+---
+
+{
+  items.length > 1 && (
+    <details class="toc" open>
+      <summary class="toc__summary">목차</summary>
+      <ul class="toc__list">
+        {items.map((h) => (
+          <li class:list={['toc__item', `toc__item--h${h.depth}`]}>
+            <a class="toc__link" href={`#${h.slug}`} data-toc={h.slug}>
+              {h.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </details>
+  )
+}
+
+<script>
+  // 스크롤 위치에 따라 현재 섹션을 목차에서 강조한다.
+  const links = Array.from(document.querySelectorAll('[data-toc]'));
+  if (links.length > 0) {
+    const setActive = (id: string) => {
+      for (const l of links) {
+        l.classList.toggle('is-active', l.getAttribute('data-toc') === id);
+      }
+    };
+    for (const link of links) {
+      const target = document.getElementById(link.getAttribute('data-toc') ?? '');
+      if (target) {
+        // 각 섹션이 화면 상단 근처에 오면 활성화
+        new IntersectionObserver(
+          (entries) => {
+            for (const e of entries) {
+              if (e.isIntersecting) setActive(target.id);
+            }
+          },
+          { rootMargin: '0px 0px -75% 0px', threshold: 0 },
+        ).observe(target);
+      }
+    }
+  }
+</script>
+
+<style lang="scss">
+  @import '../styles/variables';
+
+  .toc {
+    max-width: $layout-post-single-width;
+    margin: 0 auto 1.5rem;
+    padding: 0.6rem 1rem 0.8rem;
+    border: 1px solid $color-gray-border;
+    border-radius: 8px;
+    background: var(--c-surface);
+    font-size: $typographic-small-font-size;
+
+    &__summary {
+      cursor: pointer;
+      font-weight: 600;
+      color: $color-base;
+    }
+
+    &__list {
+      list-style: none;
+      margin: 0.5rem 0 0;
+      padding: 0;
+    }
+
+    &__item--h3 {
+      padding-left: 1rem;
+    }
+
+    &__link {
+      color: $color-gray;
+      line-height: 1.9;
+
+      &:hover,
+      &.is-active {
+        color: $color-primary;
+      }
+    }
+  }
+</style>

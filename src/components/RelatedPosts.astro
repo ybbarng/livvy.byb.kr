@@ -1,0 +1,71 @@
+---
+// 같은 카테고리·태그를 공유하는 글을 추천한다(글 하단).
+import type { CollectionEntry } from 'astro:content';
+import { categoryName } from '../config/site';
+import { categoryPath, postPath } from '../lib/path';
+
+const { posts } = Astro.props as { posts: CollectionEntry<'posts'>[] };
+---
+
+{
+  posts.length > 0 && (
+    <section class="related">
+      <h2 class="related__title">관련 글</h2>
+      <ul class="related__list">
+        {posts.map((p) => (
+          <li class="related__item">
+            <a class="related__link" href={postPath(p.data.slug)}>
+              {p.data.title}
+            </a>
+            <a class="related__cat" href={categoryPath(p.data.category)}>
+              {categoryName(p.data.category)}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}
+
+<style lang="scss">
+  @import '../styles/variables';
+  @import '../styles/mixins';
+
+  .related {
+    max-width: $layout-post-single-width;
+    margin: 0 auto;
+    @include margin-top(1);
+
+    &__title {
+      font-size: 1.1rem;
+      @include margin-bottom(0.5);
+    }
+
+    &__list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    &__item {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      padding: 5px 0;
+    }
+
+    &__link {
+      color: $color-base;
+
+      &:hover {
+        color: $color-primary;
+      }
+    }
+
+    &__cat {
+      font-size: $typographic-small-font-size;
+      color: $color-secondary;
+      white-space: nowrap;
+    }
+  }
+</style>
