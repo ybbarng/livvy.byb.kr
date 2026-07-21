@@ -35,7 +35,6 @@
     "@types/lodash-es": "^4.17.12",
     "playwright": "^1.61.1",
     "postcss-pxtorem": "^6.1.0",
-    "prismjs": "^1.30.0",
     "typescript": "^5.9.3",
     "vitest": "^4.1.10"
   }

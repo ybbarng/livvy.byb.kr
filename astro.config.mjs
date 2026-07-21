@@ -46,8 +46,15 @@ export default defineConfig({
     responsiveStyles: true,
   },
   markdown: {
-    // 기존 gatsby-remark-prismjs(okaidia 테마)를 재현. CSS는 styles/base/_highlight.scss.
-    syntaxHighlight: 'prism',
+    // 코드 하이라이트: Astro 내장 Shiki 듀얼 테마(라이트/다크 자동 전환).
+    // 다크 활성화 CSS는 styles/base/_highlight.scss 에 있다.
+    syntaxHighlight: 'shiki',
+    shikiConfig: {
+      themes: {
+        light: 'github-light',
+        dark: 'github-dark',
+      },
+    },
     smartypants: true,
   },
   vite: {

@@ -1,7 +1,7 @@
 /**
  * Post single (글 상세) — 마크다운 본문에 적용되므로 전역 스타일로 둔다.
  * 기존 PostTemplateDetails/style.scss 이식.
- * .gatsby-highlight 래퍼는 Astro Prism 의 pre[class*="language-"] 로 대체한다.
+ * 코드 블록은 Shiki 가 pre.astro-code 로 렌더한다(스타일은 base/_highlight).
  */
 
 .post-single {
@@ -45,7 +45,7 @@
         & a {
             text-decoration: underline;
         }
-        & pre[class*="language-"] {
+        & .astro-code {
             max-width: $layout-post-single-width;
             margin-left: 15px;
             margin-right: 15px;
@@ -111,7 +111,7 @@
             margin-right: auto;
         }
         &__body {
-            & pre[class*="language-"] {
+            & .astro-code {
                 margin-left: auto;
                 margin-right: auto;
             }
