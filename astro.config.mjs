@@ -3,10 +3,11 @@ import sitemap from '@astrojs/sitemap';
 import pxtorem from 'postcss-pxtorem';
 
 // 폰트 로딩 시 밀림(FOUT)·스크롤 위치 튐 방지:
-// 본문 웹폰트(Noto/Roboto Variable)를 font-display: optional 로 바꾼다.
+// 밀림의 주범인 무거운 한글(CJK) 폰트만 font-display: optional 로 바꾼다.
 // → 폰트가 아주 빨리 준비되지 않으면 그 페이지에선 스왑하지 않고 시스템 폰트로 유지 →
 //   레이아웃이 로딩 중 바뀌지 않는다. 재방문(캐시)에선 Noto 가 처음부터 적용된다.
-// 아이콘 폰트(fontello)는 건드리면 아이콘이 안 보일 수 있어, 'Variable' 폰트만 대상으로 한다.
+// 가벼운 라틴(Roboto·Noto Sans)은 원래대로 swap 유지 → 상단 메뉴·월 표시가 항상 제 굵기로
+// 보인다(라틴 폰트는 작아 스왑해도 밀림이 거의 없다). 아이콘 폰트(fontello)도 대상 아님.
 const forceOptionalFontDisplay = () => ({
   postcssPlugin: 'force-optional-font-display',
   AtRule: {
@@ -15,7 +16,7 @@ const forceOptionalFontDisplay = () => ({
       rule.walkDecls('font-family', (d) => {
         family = d.value;
       });
-      if (!/Variable/i.test(family)) return;
+      if (!/Noto Sans (KR|JP|SC) Variable/i.test(family)) return;
       let found = false;
       rule.walkDecls('font-display', (d) => {
         d.value = 'optional';
