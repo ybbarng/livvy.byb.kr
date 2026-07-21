@@ -18,4 +18,9 @@ describe('path — 원본 URL 재현(trailing slash + kebabCase)', () => {
     expect(tagSlug('tls-1-3')).toBe('tls-1-3');
     expect(tagPath('일상')).toBe('/tags/일상/');
   });
+
+  it('공백·대문자가 섞인 태그는 kebabCase 로 정규화한다', () => {
+    expect(tagSlug('TLS 1.3')).toBe('tls-1-3');
+    expect(tagPath('Web Security')).toBe('/tags/web-security/');
+  });
 });
