@@ -63,6 +63,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     max-width: 640px;
     margin: 0 auto;
     padding: 0 15px;
+    // 결과가 적거나 없을 때 footer가 검색창 바로 밑에 붙지 않도록 여유 높이를 준다.
+    min-height: 60vh;
 
     &__title {
       @include margin-bottom(1);
