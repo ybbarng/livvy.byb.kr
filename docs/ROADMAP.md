@@ -2,13 +2,13 @@
 
 앞으로 하고 싶은 것들. 우선순위와 시점은 유연하게.
 
-## 코드 표현 강화 (개발자 글 대상)
+## 코드 표현 강화 (개발자 글 대상) ✅ 완료
 
 용배님의 기술 글(TLS, SQL 등)에서 코드가 잘 보이도록.
 
-- 현재: Prism `okaidia` 하이라이트 (원본 디자인 유지)
-- 개선 검토: **[Expressive Code](https://expressive-code.com/)** — 파일명 탭, 복사 버튼, 줄 강조, diff 표시 등 풍부한 코드 블록
-- 언어별 구문 강조 확장
+- Prism `okaidia` → **Shiki 듀얼 테마**로 전환(라이트/다크 자동 전환)
+- **[Expressive Code](https://expressive-code.com/)** 도입 — 파일명 탭·복사 버튼·프레임
+- 줄 강조·diff·터미널 프레임 등은 EC 기능으로 글에서 바로 사용 가능
 
 ## 인터랙티브 코드 (동적 실행)
 
@@ -34,10 +34,9 @@
 
 ## 폰트
 
-- 원본과 픽셀 대조해 미세 차이 조정(원본은 Noto Sans 웹폰트 로드가 주석 처리돼 시스템 폰트로 보였을 가능성)
-- 로딩 성능 추가 최적화는 [I18N-ROADMAP.md](I18N-ROADMAP.md) 참조
+- 로딩 성능 추가 최적화(선택·낮은 우선순위)는 [I18N-ROADMAP.md](I18N-ROADMAP.md) 참조
 
 ## 기타
 
 - **다국어**: [I18N-ROADMAP.md](I18N-ROADMAP.md) (발음 표기·언어 태그·DeepL)
-- **Disqus 댓글 17개 → Giscus 이전**: [MIGRATION.md](MIGRATION.md) 참조
+- **Disqus 댓글 17개 → Giscus**: ✅ 완료 — giscus 전환 + 옛 댓글은 글 하단 정적 아카이브로 보존

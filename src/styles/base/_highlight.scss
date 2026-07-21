@@ -1,31 +1,6 @@
-// 코드 하이라이트 — Astro 내장 Shiki(듀얼 테마).
-// 라이트/다크 각각의 VS Code 테마를 빌드 시점에 렌더한다.
-// 라이트가 기본이고, [data-theme="dark"] 일 때 아래 규칙이 다크 색으로 바꾼다.
+// 블록 코드는 Expressive Code(astro.config integrations)가 렌더·스타일한다.
+// 여기서는 인라인 코드(`code`)만 스타일한다(EC 는 펜스 코드 블록만 담당).
 
-// 블록 코드: Shiki 는 <pre class="astro-code"> 로 감싼다.
-.astro-code {
-  padding: 1em 1.15em;
-  border-radius: 8px;
-  border: 1px solid var(--c-border); // 라이트/다크 배경 모두에서 코드 블록을 또렷하게 구분
-  overflow-x: auto;
-  font-size: 0.9em;
-  line-height: 1.6;
-  // 배경/글자색은 Shiki 가 테마에서 인라인으로 넣는다.
-}
-
-// 다크 모드: Shiki 가 각 토큰에 심어둔 --shiki-dark* 커스텀 속성으로 색·배경을 전환.
-:root[data-theme="dark"] {
-  .astro-code,
-  .astro-code span {
-    color: var(--shiki-dark) !important;
-    background-color: var(--shiki-dark-bg) !important;
-    font-style: var(--shiki-dark-font-style) !important;
-    font-weight: var(--shiki-dark-font-weight) !important;
-    text-decoration: var(--shiki-dark-text-decoration) !important;
-  }
-}
-
-// 인라인 코드(`code`) — Shiki 가 손대지 않으므로 직접 스타일(테마 대응).
 :not(pre) > code {
   background: var(--c-surface);
   color: var(--c-code);

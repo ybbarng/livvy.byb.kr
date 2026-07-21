@@ -1,5 +1,6 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
+import expressiveCode from 'astro-expressive-code';
 import pxtorem from 'postcss-pxtorem';
 
 // 폰트 로딩 시 밀림(FOUT)·스크롤 위치 튐 방지:
@@ -37,7 +38,21 @@ export default defineConfig({
   build: {
     format: 'directory',
   },
-  integrations: [sitemap()],
+  integrations: [
+    // 코드 블록: Expressive Code(Shiki 기반) — 복사 버튼·파일명 프레임·줄 강조 등.
+    // 첫 테마(github-light)가 기본, 다크는 [data-theme='dark'] 에서 활성화(수동 토글 연동).
+    expressiveCode({
+      themes: ['github-light', 'github-dark'],
+      themeCssSelector: (theme) => `[data-theme='${theme.type}']`,
+      useDarkModeMediaQuery: false,
+      styleOverrides: {
+        borderRadius: '8px',
+        borderColor: 'var(--c-border)',
+        frames: { shadowColor: 'transparent' },
+      },
+    }),
+    sitemap(),
+  ],
   image: {
     // 마크다운 이미지도 자동으로 여러 크기의 축소본 + srcset 을 생성한다.
     // constrained: 표시 폭에 맞춰 내려받고(원본보다 크게는 안 키움), 화면 밀도별로 선택.
@@ -46,15 +61,8 @@ export default defineConfig({
     responsiveStyles: true,
   },
   markdown: {
-    // 코드 하이라이트: Astro 내장 Shiki 듀얼 테마(라이트/다크 자동 전환).
-    // 다크 활성화 CSS는 styles/base/_highlight.scss 에 있다.
-    syntaxHighlight: 'shiki',
-    shikiConfig: {
-      themes: {
-        light: 'github-light',
-        dark: 'github-dark',
-      },
-    },
+    // 코드 블록은 Expressive Code(위 integrations)가 처리한다.
+    syntaxHighlight: false,
     smartypants: true,
   },
   vite: {
