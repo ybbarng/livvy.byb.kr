@@ -62,8 +62,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   .search-page {
     max-width: 640px;
     margin: 0 auto;
-    padding: 0 15px;
-    // 결과가 적거나 없을 때 footer가 검색창 바로 밑에 붙지 않도록 여유 높이를 준다.
+    // 아래 여백으로 결과(또는 더보기 버튼)와 footer 사이 간격을 항상 확보한다.
+    padding: 0 15px 3.5rem;
+    // 결과가 적거나 없을 때도 footer가 위로 붙지 않도록 최소 높이를 준다.
     min-height: 60vh;
 
     &__title {
