@@ -23,6 +23,9 @@ design-reference/diff/
 # disqus export (개인 대화 내용 — 이전 작업용 로컬 보관, 커밋하지 않음)
 scripts/disqus/
 
+# contentful 폐기 전 백업(초안 등 미발행 내용 포함 — 공개 저장소에 올리지 않음)
+backup/
+
 # logs
 logs
 *.log
