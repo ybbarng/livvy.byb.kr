@@ -18,6 +18,7 @@
   "author": "Bang Yongbae <ybbarng@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "@astrojs/markdown-remark": "^7.2.1",
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.3",
     "@fontsource-variable/noto-sans": "^5.3.0",
@@ -37,6 +38,7 @@
     "playwright": "^1.61.1",
     "postcss-pxtorem": "^6.1.0",
     "typescript": "^5.9.3",
+    "unist-util-visit": "^5.1.0",
     "vitest": "^4.1.10"
   }
 }

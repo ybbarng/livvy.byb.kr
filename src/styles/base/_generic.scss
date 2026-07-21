@@ -114,6 +114,18 @@ a {
     border-radius: 2px;
 }
 
+// 후리가나·병음 루비 표기 ({한자|읽기} → <ruby>)
+ruby {
+    ruby-align: center;
+}
+
+rt {
+    font-size: 0.5em;
+    color: $color-gray;
+    font-weight: 400;
+    line-height: 1.1;
+}
+
 b,
 strong {
     font-weight: 700;
