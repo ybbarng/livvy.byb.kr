@@ -32,10 +32,10 @@ export const site = {
   copyright: `© ${copyrightYears} livvy & ybbarng`, // 플레인 텍스트(RSS 등에서 쓸 수 있게)
   footer: {
     years: copyrightYears,
-    // 이름을 누르면 각자의 GitHub 프로필로 이동한다.
+    // 이름을 누르면 각자의 소개 페이지로 이동한다.
     authors: [
-      { name: 'livvy', url: 'https://github.com/livvykim' },
-      { name: 'ybbarng', url: 'https://github.com/ybbarng' },
+      { name: 'livvy', url: '/pages/about-livvy/' },
+      { name: 'ybbarng', url: '/pages/about-ybbarng/' },
     ],
     // 이 블로그를 다시 만든 도구
     builtWith: { label: 'Claude Code', url: 'https://claude.com/claude-code' },

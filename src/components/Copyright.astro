@@ -10,9 +10,7 @@ const { authors, years, builtWith } = site.footer;
       authors.map((a, i) => (
         <>
           {i > 0 ? ' & ' : ''}
-          <a href={a.url} target="_blank" rel="noopener noreferrer">
-            {a.name}
-          </a>
+          <a href={a.url}>{a.name}</a>
         </>
       ))
     }

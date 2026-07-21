@@ -1,14 +1,12 @@
 ---
-title: "About Ybbarng"
+title: "용배"
 slug: "about-ybbarng"
 date: "2018-01-20T18:00+09:00"
-description: "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante."
+description: "Y❤️H 의 Y. 개발하고, 가끔 프랑스어를 더듬거리는 사람."
 ---
 
-Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante.
+안녕하세요, **용배(Y)** 예요.
 
-![Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed, commodo vitae, ornare sit amet, wisi.](./1.jpg)
+낮에는 개발자로 일하고, 여기선 TLS·SQL·통계처럼 조금 딱딱한 것들과 씨름한 이야기를 남겨요. 요즘은 프랑스어를 한 스푼씩 공부하는 중이라, 언젠가 이 블로그에도 서툰 *bonjour* 가 등장할지도 몰라요.
 
-*Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed, commodo vitae, ornare sit amet, wisi.*
-
-Aenean fermentum, elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui. Donec non enim in turpis pulvinar facilisis. Ut felis. Praesent dapibus, neque id cursus faucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor, facilisis luctus, metus
+이 블로그를 만들고 고치는 사람이기도 해요. 로고 **Y❤️H** 에서 하트 왼쪽의 Y가 접니다.
