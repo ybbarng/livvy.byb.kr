@@ -4,7 +4,7 @@ import Sidebar from '../../components/Sidebar.astro';
 import PostList from '../../components/PostList.astro';
 import { site } from '../../config/site';
 import { getPublishedPosts } from '../../lib/content';
-import { getCollection, render } from 'astro:content';
+import { getCollection } from 'astro:content';
 
 export async function getStaticPaths() {
   return site.authors.map((author) => ({
@@ -17,21 +17,22 @@ const { author } = Astro.props;
 const posts = (await getPublishedPosts()).filter((p) => p.data.author === author.id);
 const title = `${author.name}가 쓴 글`;
 
-// 이 저자의 소개 페이지(pages 컬렉션의 about-{id})를 찾아 본문을 위에 얹는다.
+// 이 저자의 소개 페이지(pages 컬렉션의 about-{id}). 요약(description)만 보여주고
+// 전체 소개는 소개 페이지에서 읽게 한다(중복 방지).
 const pages = await getCollection('pages');
 const about = pages.find((p) => p.data.slug === `about-${author.id}`);
-const AboutContent = about ? (await render(about)).Content : null;
 ---
 
 <BaseLayout title={title}>
   <Sidebar />
   <PostList title={title} posts={posts}>
     {
-      AboutContent && (
+      about && (
         <section slot="intro" class="author-intro">
-          <div class="author-intro__body">
-            <AboutContent />
-          </div>
+          {about.data.description && <p class="author-intro__desc">{about.data.description}</p>}
+          <a class="author-intro__more" href={`/pages/${about.data.slug}/`}>
+            소개 더 보기 →
+          </a>
         </section>
       )
     }
@@ -43,12 +44,18 @@ const AboutContent = about ? (await render(about)).Content : null;
   @import '../../styles/mixins';
 
   .author-intro {
-    @include margin-bottom(1.25);
-    padding-bottom: 1.25rem;
+    @include margin-bottom(1);
+    padding-bottom: 1rem;
     border-bottom: 1px solid $color-gray-border;
 
-    &__body :global(p) {
-      line-height: 1.9;
+    &__desc {
+      margin: 0 0 6px;
+      color: $color-base;
+      line-height: 1.8;
+    }
+
+    &__more {
+      font-size: $typographic-small-font-size;
     }
   }
 </style>
