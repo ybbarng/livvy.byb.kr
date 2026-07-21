@@ -9,6 +9,10 @@ backend:
   # Cloudflare Worker(sveltia-cms-auth) 주소.
   base_url: https://sveltia-cms-auth.ybbarng.workers.dev
 
+# 관리자 화면에서 블로그로 돌아가는 링크(우상단에 사이트 링크가 생김)
+site_url: https://livvy.byb.kr
+display_url: https://livvy.byb.kr
+
 # UI 언어
 locale: ko
 
