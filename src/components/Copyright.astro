@@ -16,6 +16,8 @@ const { authors, years, builtWith } = site.footer;
         </>
       ))
     }
+    <span class="sep"> · </span>
+    <a class="rss" href="/rss.xml">RSS</a>
   </p>
   <p class="credit">
     <a href={builtWith.url} target="_blank" rel="noopener noreferrer">{builtWith.label}</a>로 다시 만들었습니다
@@ -30,14 +32,17 @@ const { authors, years, builtWith } = site.footer;
   }
 
   .copyright {
+    margin: 0;
     color: $color-gray;
     font-size: $typographic-small-font-size;
+    line-height: 1.4;
   }
 
   .credit {
-    margin-top: 4px;
+    margin: 2px 0 0;
     color: lighten($color-gray, 12%);
     font-size: $typographic-small-font-size;
+    line-height: 1.4;
   }
 
   a {
