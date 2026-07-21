@@ -52,7 +52,7 @@ const charCount = plainText.replace(/\s/g, '').length;
 const readingMinutes = Math.max(1, Math.round(charCount / 500));
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout title={title} description={description} ogImage={`/og/${post.data.slug}.png`}>
   <div class="post-single">
     <div class="post-single__inner">
       <h1 class="post-single__title">{title}</h1>

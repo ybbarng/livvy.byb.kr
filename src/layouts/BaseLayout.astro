@@ -19,10 +19,19 @@ interface Props {
   title?: string;
   description?: string;
   noindex?: boolean;
+  // 글별 OG 이미지 경로(예: /og/slug.png). 없으면 공통 로고 이미지를 쓴다.
+  ogImage?: string;
 }
-const { title = site.title, description = site.subtitle, noindex = false } = Astro.props;
+const { title = site.title, description = site.subtitle, noindex = false, ogImage: ogImageProp } =
+  Astro.props;
 const fullTitle = title === site.title ? title : `${title} - ${site.title}`;
-const ogImageUrl = new URL(ogImage.src, Astro.site).href;
+// 글별 OG는 1200×630 가로형(SNS 큰 카드), 공통 로고는 800×800 정사각형.
+const ogImageUrl = ogImageProp
+  ? new URL(ogImageProp, Astro.site).href
+  : new URL(ogImage.src, Astro.site).href;
+const ogImageWidth = ogImageProp ? 1200 : 800;
+const ogImageHeight = ogImageProp ? 630 : 800;
+const twitterCard = ogImageProp ? 'summary_large_image' : 'summary';
 ---
 
 <!doctype html>
@@ -54,9 +63,13 @@ const ogImageUrl = new URL(ogImage.src, Astro.site).href;
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImageUrl} />
     <meta property="og:image:type" content="image/png" />
-    <meta property="og:image:width" content="800" />
-    <meta property="og:image:height" content="800" />
+    <meta property="og:image:width" content={String(ogImageWidth)} />
+    <meta property="og:image:height" content={String(ogImageHeight)} />
     <meta property="og:locale" content="ko_KR" />
+    <meta name="twitter:card" content={twitterCard} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
     <link rel="icon" href="/favicon-16.png" type="image/png" sizes="16x16" />
