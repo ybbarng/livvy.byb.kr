@@ -39,6 +39,10 @@ const isActive = (path: string) => current === path;
       ))
     }
     <li class="menu__list-item menu__actions">
+      <a class="menu__list-item-link menu__search" href="/search/" title="블로그 글 검색" aria-label="검색">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8" /><path d="M21 21l-4.35-4.35" /></svg>
+        <span class="menu__search-label">검색</span>
+      </a>
       <button
         type="button"
         id="theme-toggle"
@@ -296,6 +300,17 @@ const isActive = (path: string) => current === path;
     line-height: 1;
   }
 
+  // 검색: 데스크톱은 돋보기 아이콘만, 모바일은 아이콘+'검색' 라벨(테마 토글과 동일)
+  .menu__search {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .menu__search-label {
+    display: none;
+  }
+
   :global(html[data-theme='dark']) {
     .theme-opt--to-dark {
       display: none;
@@ -314,7 +329,8 @@ const isActive = (path: string) => current === path;
       height: $header-height;
     }
 
-    .theme-label {
+    .theme-label,
+    .menu__search-label {
       display: inline;
     }
   }

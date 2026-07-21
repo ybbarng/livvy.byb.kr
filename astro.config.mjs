@@ -52,8 +52,8 @@ export default defineConfig({
         frames: { shadowColor: 'transparent' },
       },
     }),
-    // /guide/ (글쓰기 가이드)는 검색엔진 색인 대상이 아니라 sitemap 에서 제외
-    sitemap({ filter: (page) => !page.includes('/guide') }),
+    // /guide/(글쓰기 가이드)·/search/(검색)는 색인 대상이 아니라 sitemap 에서 제외
+    sitemap({ filter: (page) => !page.includes('/guide') && !page.includes('/search') }),
   ],
   image: {
     // 마크다운 이미지도 자동으로 여러 크기의 축소본 + srcset 을 생성한다.

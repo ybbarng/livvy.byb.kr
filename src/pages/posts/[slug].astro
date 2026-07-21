@@ -55,10 +55,10 @@ const readingMinutes = Math.max(1, Math.round(charCount / 500));
 <BaseLayout title={title} description={description} ogImage={`/og/${post.data.slug}.png`}>
   <div class="post-single">
     <div class="post-single__inner">
-      <h1 class="post-single__title">{title}</h1>
+      <h1 class="post-single__title" data-pagefind-meta="title">{title}</h1>
       <p class="post-single__readtime">약 {readingMinutes}분 읽기</p>
       <TableOfContents headings={headings} />
-      <div class="post-single__body">
+      <div class="post-single__body" data-pagefind-body>
         <Content />
       </div>
     </div>

@@ -10,7 +10,7 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "node scripts/normalize-cms-images.mjs && astro build",
+    "build": "node scripts/normalize-cms-images.mjs && astro build && pagefind --site dist",
     "preview": "astro preview",
     "check": "astro check",
     "test": "vitest run",
@@ -44,6 +44,7 @@
     "astro-og-canvas": "^0.13.0",
     "canvaskit-wasm": "0.41.1",
     "lefthook": "^2.1.10",
+    "pagefind": "^1.5.2",
     "playwright": "^1.61.1",
     "postcss-pxtorem": "^6.1.0",
     "typescript": "^5.9.3",
