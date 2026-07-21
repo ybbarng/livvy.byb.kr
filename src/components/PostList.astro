@@ -12,6 +12,7 @@ const { title, posts } = Astro.props;
 <div class="content">
   <div class="content__inner">
     <div class="page">
+      <slot name="intro" />
       {title && <h1 class="page__title">{title}</h1>}
       <div class="page__body">
         {posts.map((p) => <Post post={p} />)}

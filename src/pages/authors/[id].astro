@@ -4,6 +4,7 @@ import Sidebar from '../../components/Sidebar.astro';
 import PostList from '../../components/PostList.astro';
 import { site } from '../../config/site';
 import { getPublishedPosts } from '../../lib/content';
+import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
   return site.authors.map((author) => ({
@@ -15,9 +16,39 @@ export async function getStaticPaths() {
 const { author } = Astro.props;
 const posts = (await getPublishedPosts()).filter((p) => p.data.author === author.id);
 const title = `${author.name}가 쓴 글`;
+
+// 이 저자의 소개 페이지(pages 컬렉션의 about-{id})를 찾아 본문을 위에 얹는다.
+const pages = await getCollection('pages');
+const about = pages.find((p) => p.data.slug === `about-${author.id}`);
+const AboutContent = about ? (await render(about)).Content : null;
 ---
 
 <BaseLayout title={title}>
   <Sidebar />
-  <PostList title={title} posts={posts} />
+  <PostList title={title} posts={posts}>
+    {
+      AboutContent && (
+        <section slot="intro" class="author-intro">
+          <div class="author-intro__body">
+            <AboutContent />
+          </div>
+        </section>
+      )
+    }
+  </PostList>
 </BaseLayout>
+
+<style lang="scss">
+  @import '../../styles/variables';
+  @import '../../styles/mixins';
+
+  .author-intro {
+    @include margin-bottom(1.25);
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid $color-gray-border;
+
+    &__body :global(p) {
+      line-height: 1.9;
+    }
+  }
+</style>
