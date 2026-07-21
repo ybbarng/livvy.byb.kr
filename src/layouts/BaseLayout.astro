@@ -84,6 +84,12 @@ const twitterCard = ogImageProp ? 'summary_large_image' : 'summary';
         if (window.caches) caches.keys().then((keys) => keys.forEach((k) => caches.delete(k)));
       }
     </script>
+    {/* Cloudflare Web Analytics — 쿠키 없음·개인정보 미수집. spa:true 로 View Transitions 이동도 집계. */}
+    <script
+      is:inline
+      defer
+      src="https://static.cloudflareinsights.com/beacon.min.js"
+      data-cf-beacon='{"token": "24d231ca90664d5fac2bb7925dcb8249", "spa": true}'></script>
   </head>
   <body>
     <div class="page">
