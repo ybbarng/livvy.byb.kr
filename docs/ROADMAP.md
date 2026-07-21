@@ -43,6 +43,8 @@
 - **글별 OG 이미지**: ✅ 완료 — `astro-og-canvas`로 빌드 때 글마다 제목·설명 카드(1200×630) 생성. 제목이 한/일/중/프랑스어 어느 것이든 그려지도록 Noto Sans 4종 TTF를 `src/assets/og-fonts/`에 두고 대체 순서(`Noto Sans KR Thin` 등 실제 family명)로 넘김 — 이 폰트는 이미지 생성 전용이라 브라우저로 전송되지 않는다. 트위터 큰 카드 메타 포함.
 - **글 검색**: ✅ 완료 — `Pagefind`로 빌드 때 글 본문 색인(`data-pagefind-body`), 메뉴 돋보기 → `/search/`에서 정적 검색. 한/영 모두 검색·강조. dev에선 색인이 없어 빌드·배포본에서만 동작.
 - **화면 전환·애니메이션**: ✅ 완료 — View Transitions(부드러운 페이지 전환·전환 후 테마 유지, 토글은 이벤트 위임), 목차 펼침/접힘·모바일 메뉴 슬라이드, `prefers-reduced-motion` 존중.
+- **접속 통계**: ✅ 완료 — Cloudflare Web Analytics beacon(`BaseLayout`, `spa:true`). 쿠키·개인정보 없음. (CMS 로그인용 Cloudflare Worker `sveltia-cms-auth`와는 별개)
+- **유튜브 영상 임베드**: ✅ 완료 — `plugins/remark-youtube.mjs`. 유튜브 링크만 한 줄에 두면 반응형 16:9 영상으로 변환(문장 속 링크는 텍스트 유지). 썸네일 클릭 시 `youtube-nocookie` iframe으로 재생(성능·프라이버시). 같은 방식으로 Vimeo·지도 등으로 확장 가능.
 
 ## 열린 결정 (정하면 진행)
 
