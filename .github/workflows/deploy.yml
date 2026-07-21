@@ -19,11 +19,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-          cache: npm
-      - run: npm ci
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
       - name: 드래그앤드롭 이미지 위치 정리 (Sveltia #830 우회)
         run: |
           node scripts/normalize-cms-images.mjs
@@ -34,7 +35,7 @@ jobs:
             git commit -m "chore: 드래그앤드롭 이미지 위치 자동 정리"
             git push origin HEAD:main
           fi
-      - run: npm run build
+      - run: pnpm run build
       - uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist

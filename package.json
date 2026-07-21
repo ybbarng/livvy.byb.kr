@@ -1,6 +1,7 @@
 {
   "name": "livvy.byb.kr",
   "version": "2.0.0",
+  "packageManager": "pnpm@10.32.1",
   "description": "현지와 용배의 블로그 — Astro + 마크다운",
   "type": "module",
   "engines": {
@@ -40,5 +41,8 @@
     "typescript": "^5.9.3",
     "unist-util-visit": "^5.1.0",
     "vitest": "^4.1.10"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["esbuild", "@parcel/watcher", "sharp"]
   }
 }

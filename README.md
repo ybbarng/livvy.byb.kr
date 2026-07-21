@@ -47,15 +47,15 @@
 
 ## 🛠 개발
 
-Node 24 이상이 필요합니다(`.nvmrc` 참고).
+Node 24 이상 · **pnpm** (`packageManager` 필드 참고).
 
 ```bash
-npm install
-npm run dev       # 개발 서버 (http://localhost:4321)
-npm run build     # 프로덕션 빌드 → dist/
-npm run preview   # 빌드 결과 미리보기
-npm test          # vitest (날짜·URL 유틸 테스트)
-npm run check     # astro 타입 체크
+pnpm install
+pnpm dev          # 개발 서버 (http://localhost:4321)
+pnpm build        # 프로덕션 빌드 → dist/
+pnpm preview      # 빌드 결과 미리보기
+pnpm test         # vitest (날짜·URL 유틸 테스트)
+pnpm check        # astro 타입 체크
 ```
 
 ## 📁 콘텐츠 구조
