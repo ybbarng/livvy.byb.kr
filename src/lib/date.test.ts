@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { monthYear, koreanDate, toEpoch } from './date';
+import { describe, expect, it } from 'vitest';
+import { koreanDate, monthYear, toEpoch } from './date';
 
 describe('date — 작성 당시 현지 벽시계(offset) 보존 표시', () => {
   it('KST(+09:00) 게시일을 그대로 표시', () => {

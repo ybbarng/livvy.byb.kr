@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { postPath, pagePath, authorPath, categoryPath, tagPath, tagSlug } from './path';
+import { describe, expect, it } from 'vitest';
+import { authorPath, categoryPath, pagePath, postPath, tagPath, tagSlug } from './path';
 
 describe('path — 원본 URL 재현(trailing slash + kebabCase)', () => {
   it('글·페이지·저자·카테고리 경로는 끝에 / 를 붙인다', () => {
