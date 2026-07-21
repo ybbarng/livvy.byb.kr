@@ -5,6 +5,7 @@
 :root {
   --c-bg: #ffffff; // 페이지 배경
   --c-text: #5f5f5f; // 본문 텍스트
+  --c-heading: #333333; // 제목(본문보다 진하게)
   --c-text-muted: #737373; // 보조 텍스트
   --c-text-faint: #929292; // 3차(footer 크레딧 등)
   --c-border: #e6e6e6; // 테두리
@@ -20,6 +21,7 @@
 :root[data-theme='dark'] {
   --c-bg: #1a1b1e;
   --c-text: #cdced2;
+  --c-heading: #e8e8ea; // 다크에서 제목은 더 밝게
   --c-text-muted: #9a9ba1;
   --c-text-faint: #7c7d83;
   --c-border: #34363c;

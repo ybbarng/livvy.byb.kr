@@ -17,7 +17,7 @@
         margin-right: auto;
         font-weight: 600;
         text-align: center;
-        color: #333333;
+        color: var(--c-heading);
         @include line-height(1.65);
         @include margin-top(1);
         @include margin-bottom(0);
