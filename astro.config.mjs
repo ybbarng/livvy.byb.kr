@@ -7,6 +7,7 @@ import rehypeSlug from 'rehype-slug';
 import remarkCallout from './plugins/remark-callout.mjs';
 import remarkEmbed from './plugins/remark-embed.mjs';
 import remarkRuby from './plugins/remark-ruby.mjs';
+import remarkSpoiler from './plugins/remark-spoiler.mjs';
 
 // 폰트 로딩 시 밀림(FOUT)·스크롤 위치 튐 방지:
 // 밀림의 주범인 무거운 한글(CJK) 폰트만 font-display: optional 로 바꾼다.
@@ -70,7 +71,7 @@ export default defineConfig({
     // 코드 블록은 Expressive Code(위 integrations)가 처리한다.
     syntaxHighlight: false,
     // 후리가나·병음 루비({한자|읽기}) · 링크 임베드 · 콜아웃(> [!NOTE])
-    remarkPlugins: [remarkRuby, remarkEmbed, remarkCallout],
+    remarkPlugins: [remarkRuby, remarkEmbed, remarkCallout, remarkSpoiler],
     // 소제목에 id 부여 + 클릭하면 링크되는 앵커(#) 추가
     rehypePlugins: [
       rehypeSlug,

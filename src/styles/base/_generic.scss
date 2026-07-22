@@ -359,6 +359,45 @@ h4:hover > .heading-anchor,
     opacity: 1;
 }
 
+// 정답 가리기(remark-spoiler): ||내용|| → 눌러야 보임
+.spoiler {
+    padding: 0 3px;
+    border-radius: 3px;
+    background: var(--c-surface-2);
+    color: transparent;
+    cursor: pointer;
+    user-select: none;
+    transition:
+        background 0.15s ease,
+        color 0.15s ease;
+}
+
+.spoiler.is-shown {
+    background: color-mix(in srgb, var(--c-primary) 15%, transparent);
+    color: inherit;
+    user-select: text;
+}
+
+// 읽어주기(TTS): 본문에서 텍스트 선택 시 뜨는 버튼
+.read-aloud {
+    position: absolute;
+    z-index: 50;
+    padding: 4px 10px;
+    border: 1px solid var(--c-border);
+    border-radius: 6px;
+    background: var(--c-bg);
+    color: var(--c-text);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
+    font-size: 0.8rem;
+    line-height: 1.2;
+    cursor: pointer;
+
+    &:hover {
+        border-color: var(--c-primary);
+        color: var(--c-primary);
+    }
+}
+
 // 각주(footnotes)
 .footnotes {
     margin-top: 2.5rem;

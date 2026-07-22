@@ -141,6 +141,79 @@ const twitterCard = ogImageProp ? 'summary_large_image' : 'summary';
         document.head.appendChild(s);
       }
       document.addEventListener('astro:page-load', loadTweets);
+
+      // 정답 가리기(스포일러): 클릭 또는 Enter/Space 로 펼치기·접기.
+      document.addEventListener('click', (e) => {
+        const t = e.target;
+        if (t instanceof Element) t.closest('.spoiler')?.classList.toggle('is-shown');
+      });
+      document.addEventListener('keydown', (e) => {
+        const t = e.target;
+        if ((e.key === 'Enter' || e.key === ' ') && t instanceof Element && t.classList.contains('spoiler')) {
+          e.preventDefault();
+          t.classList.toggle('is-shown');
+        }
+      });
+
+      // 읽어주기(TTS): 글 본문에서 문장을 선택하면 뜨는 버튼으로 음성 재생.
+      // 언어는 글자 종류로 자동 추정(일/한/중/프/영). 목소리는 사용자 기기에 설치된 것에 따름.
+      if ('speechSynthesis' in window) {
+        let btn: HTMLButtonElement | null = null;
+        const detectLang = (t: string) => {
+          if (/[぀-ヿ]/.test(t)) return 'ja-JP';
+          if (/[가-힣]/.test(t)) return 'ko-KR';
+          if (/[一-鿿]/.test(t)) return 'zh-CN';
+          // 프랑스어: 발음기호가 있거나, 프랑스어 특유 단어가 보이면 fr (없으면 영어로 취급)
+          if (/[àâçéèêëîïôûùüÿœæ]/i.test(t)) return 'fr-FR';
+          if (
+            /\b(bonjour|merci|salut|oui|c'est|est|être|vous|nous|je|tu|une|des|les|avec|pour|dans|mais|aussi|beaucoup)\b/i.test(
+              t,
+            )
+          )
+            return 'fr-FR';
+          return 'en-US';
+        };
+        const hide = () => {
+          if (btn) btn.style.display = 'none';
+        };
+        const ensureBtn = () => {
+          if (btn && document.body.contains(btn)) return btn;
+          btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'read-aloud';
+          btn.textContent = '🔊 읽어주기';
+          btn.style.display = 'none';
+          btn.addEventListener('mousedown', (e) => e.preventDefault());
+          btn.addEventListener('click', () => {
+            const text = (window.getSelection()?.toString() || '').trim();
+            if (!text) return;
+            speechSynthesis.cancel();
+            const u = new SpeechSynthesisUtterance(text);
+            u.lang = detectLang(text);
+            speechSynthesis.speak(u);
+            hide();
+          });
+          document.body.appendChild(btn);
+          return btn;
+        };
+        const onSelect = () => {
+          const sel = window.getSelection();
+          const text = (sel?.toString() || '').trim();
+          if (!sel || !text || !sel.rangeCount) return hide();
+          const node = sel.anchorNode;
+          const el = node ? (node instanceof Element ? node : node.parentElement) : null;
+          if (!el || !el.closest('.post-single__body')) return hide();
+          const rect = sel.getRangeAt(0).getBoundingClientRect();
+          const b = ensureBtn();
+          b.style.display = 'block';
+          b.style.top = `${window.scrollY + rect.top - 42}px`;
+          b.style.left = `${window.scrollX + rect.left}px`;
+        };
+        document.addEventListener('mouseup', () => setTimeout(onSelect, 10));
+        document.addEventListener('selectionchange', () => {
+          if (!window.getSelection()?.toString().trim()) hide();
+        });
+      }
     </script>
   </body>
 </html>
