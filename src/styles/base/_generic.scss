@@ -152,6 +152,13 @@ p {
     @include margin-bottom(1);
 }
 
+// 굵게만 있는 문단(= 소제목처럼 쓴 줄)은 위 여백을 넓히고 아래 여백을 좁혀,
+// 바로 아래 설명과 한 덩어리로 묶이게 한다(어디에 속한 내용인지 헷갈리지 않도록).
+.post-single__body p:has(> strong:only-child) {
+    margin-top: 2rem;
+    margin-bottom: 0.4rem;
+}
+
 blockquote {
     padding: 0;
     font-style: italic;
