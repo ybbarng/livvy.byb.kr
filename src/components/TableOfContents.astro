@@ -6,7 +6,10 @@ interface Heading {
   text: string;
 }
 const { headings } = Astro.props as { headings: Heading[] };
-const items = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
+// 각주 섹션 제목(자동 생성)은 목차에서 제외한다.
+const items = headings.filter(
+  (h) => h.depth >= 2 && h.depth <= 3 && h.slug !== 'footnote-label',
+);
 ---
 
 {

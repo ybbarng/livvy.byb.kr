@@ -2,6 +2,9 @@ import sitemap from '@astrojs/sitemap';
 import { defineConfig } from 'astro/config';
 import expressiveCode from 'astro-expressive-code';
 import pxtorem from 'postcss-pxtorem';
+import rehypeAutolinkHeadings from 'rehype-autolink-headings';
+import rehypeSlug from 'rehype-slug';
+import remarkCallout from './plugins/remark-callout.mjs';
 import remarkEmbed from './plugins/remark-embed.mjs';
 import remarkRuby from './plugins/remark-ruby.mjs';
 
@@ -66,8 +69,22 @@ export default defineConfig({
   markdown: {
     // 코드 블록은 Expressive Code(위 integrations)가 처리한다.
     syntaxHighlight: false,
-    // 후리가나·병음 루비: {한자|읽기} → <ruby>
-    remarkPlugins: [remarkRuby, remarkEmbed],
+    // 후리가나·병음 루비({한자|읽기}) · 링크 임베드 · 콜아웃(> [!NOTE])
+    remarkPlugins: [remarkRuby, remarkEmbed, remarkCallout],
+    // 소제목에 id 부여 + 클릭하면 링크되는 앵커(#) 추가
+    rehypePlugins: [
+      rehypeSlug,
+      [
+        rehypeAutolinkHeadings,
+        {
+          behavior: 'append',
+          properties: { className: ['heading-anchor'], ariaLabel: '이 위치로 가는 링크' },
+          content: { type: 'text', value: '#' },
+        },
+      ],
+    ],
+    // 각주 라벨을 한국어로
+    remarkRehype: { footnoteLabel: '각주', footnoteBackLabel: '본문으로 돌아가기' },
     smartypants: true,
   },
   vite: {

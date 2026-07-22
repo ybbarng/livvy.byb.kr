@@ -298,6 +298,85 @@ figcaption {
     margin: 1.5rem auto !important;
 }
 
+// 콜아웃(remark-callout): NOTE/TIP/IMPORTANT/WARNING/CAUTION 강조 박스
+.callout {
+    margin: 1.2rem 0;
+    padding: 0.75rem 1rem;
+    border-left: 4px solid var(--cl);
+    border-radius: 6px;
+    background: color-mix(in srgb, var(--cl) 9%, var(--c-bg));
+
+    > :last-child {
+        margin-bottom: 0;
+    }
+}
+
+.callout__title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0 0 0.4rem;
+    font-weight: 700;
+    color: var(--cl);
+}
+
+// 본문의 `.post-single__body :not(div)`(0,1,1)가 아이콘·라벨을 margin:auto 로 밀어버리므로,
+// 더 구체적인 선택자(0,2,0)로 콜아웃 제목의 자식을 flex 왼쪽에 붙인다.
+.callout .callout__title > * {
+    flex: 0 0 auto;
+    margin: 0;
+}
+
+.callout--note {
+    --cl: #539bf5;
+}
+.callout--tip {
+    --cl: #57ab5a;
+}
+.callout--important {
+    --cl: #986ee2;
+}
+.callout--warning {
+    --cl: #c69026;
+}
+.callout--caution {
+    --cl: #e5534b;
+}
+
+// 소제목 앵커 링크(rehype-autolink-headings): 평소 숨김, 제목에 마우스 올리면 # 표시
+.heading-anchor {
+    margin-left: 0.35em;
+    color: var(--c-text-faint);
+    text-decoration: none;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+}
+
+h2:hover > .heading-anchor,
+h3:hover > .heading-anchor,
+h4:hover > .heading-anchor,
+.heading-anchor:focus-visible {
+    opacity: 1;
+}
+
+// 각주(footnotes)
+.footnotes {
+    margin-top: 2.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--c-border);
+    font-size: $typographic-small-font-size;
+    color: var(--c-text-muted);
+
+    h2 {
+        font-size: $typographic-base-font-size * 1.1;
+        margin: 0 0 0.5rem;
+    }
+
+    .heading-anchor {
+        display: none;
+    }
+}
+
 // 애니메이션 최소화를 선호하는 사용자는 전환·애니메이션을 끈다(접근성)
 @media (prefers-reduced-motion: reduce) {
     *,

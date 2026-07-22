@@ -47,6 +47,8 @@
     "pagefind": "^1.5.2",
     "playwright": "^1.61.1",
     "postcss-pxtorem": "^6.1.0",
+    "rehype-autolink-headings": "^7.1.0",
+    "rehype-slug": "^6.0.0",
     "typescript": "^5.9.3",
     "unist-util-visit": "^5.1.0",
     "vitest": "^4.1.10"
