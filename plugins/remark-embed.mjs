@@ -11,6 +11,8 @@ const YT_RE =
 const TWEET_RE = /^https?:\/\/(?:www\.)?(?:twitter\.com|x\.com)\/[^/]+\/status\/(\d+)/i;
 const MAPS_EMBED_RE = /^https?:\/\/(?:www\.)?google\.[a-z.]+\/maps\/embed\?pb=[^\s]+$/i;
 const MAPS_AT_RE = /^https?:\/\/(?:www\.)?google\.[a-z.]+\/maps\/[^\s]*@(-?\d+\.\d+),(-?\d+\.\d+)/i;
+const CODEPEN_RE = /^https?:\/\/codepen\.io\/([^/]+)\/(?:pen|details)\/(\w+)/i;
+const STACKBLITZ_RE = /^https?:\/\/stackblitz\.com\/(edit\/[^?\s]+|~\/[^?\s]+)/i;
 
 // 유튜브 재생 전 썸네일 facade. 클릭 시 iframe 교체는 BaseLayout 스크립트가 담당.
 function youtubeHtml(id) {
@@ -34,6 +36,11 @@ function mapHtml(src) {
   return `<div class="map-embed"><iframe src="${src}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen title="지도"></iframe></div>`;
 }
 
+// 실행 가능한 코드 샌드박스(CodePen·StackBlitz): 결과가 보이는 iframe.
+function codeHtml(src, title) {
+  return `<div class="code-embed"><iframe src="${src}" loading="lazy" title="${title}" allow="accelerometer; camera; encrypted-media; geolocation; gyroscope; microphone; midi" sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"></iframe></div>`;
+}
+
 // 링크 하나를 임베드 HTML 로 분류. 해당 없으면 null.
 function embedHtml(url) {
   if (typeof url !== 'string') return null;
@@ -49,6 +56,18 @@ function embedHtml(url) {
   if (at) {
     const src = `https://www.google.com/maps?q=${at[1]},${at[2]}&z=16&hl=ko&output=embed`;
     return mapHtml(src);
+  }
+
+  const cp = u.match(CODEPEN_RE);
+  if (cp) {
+    return codeHtml(
+      `https://codepen.io/${cp[1]}/embed/${cp[2]}?default-tab=html%2Cresult`,
+      'CodePen 예제',
+    );
+  }
+  const sb = u.match(STACKBLITZ_RE);
+  if (sb) {
+    return codeHtml(`https://stackblitz.com/${sb[1]}?embed=1&view=preview`, 'StackBlitz 예제');
   }
 
   return null;
