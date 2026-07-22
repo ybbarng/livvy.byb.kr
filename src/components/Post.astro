@@ -3,12 +3,15 @@ import type { CollectionEntry } from 'astro:content';
 import { postPath, authorPath, categoryPath } from '../lib/path';
 import { monthYear } from '../lib/date';
 import { authorName, categoryName } from '../config/site';
+import { excerpt } from '../lib/excerpt';
 
 interface Props {
   post: CollectionEntry<'posts'>;
 }
 const { post } = Astro.props;
 const { title, slug, date, author, category, description } = post.data;
+// 요약: 직접 쓴 description 이 있으면 그걸, 없으면 본문 앞부분을 잘라 미리보기로 쓴다.
+const summary = description?.trim() || excerpt(post.body ?? '');
 ---
 
 <div class="post">
@@ -25,7 +28,7 @@ const { title, slug, date, author, category, description } = post.data;
   <h2 class="post__title">
     <a class="post__title-link" href={postPath(slug)}>{title}</a>
   </h2>
-  {description?.trim() && <div class="post__description">{description}</div>}
+  {summary && <div class="post__description">{summary}</div>}
   <a class="post__readmore" href={postPath(slug)}>Read</a>
 </div>
 
