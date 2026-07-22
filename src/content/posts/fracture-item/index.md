@@ -5,6 +5,8 @@ date: "2018-12-03T00:00+09:00"
 author: "livvy"
 category: "smalltalk"
 tags: ["골절일기", "병상일기", "골절템"]
+series: "골절일기"
+seriesOrder: 2
 ---
 
 *last edited : 2018-12-03
