@@ -28,5 +28,18 @@ export const koreanDate = (raw: string) => {
   return `${y}년 ${mo}월 ${day}일`;
 };
 
+// 'YYYY년 MM월 DD일 HH:MM:SS' — 날짜에 마우스 올리거나 눌렀을 때 보여줄 상세 시각.
+// koreanDate 와 같은 벽시계 기준(작성 당시 현지 시각)이라 시/분/초까지 그대로 보인다.
+export const koreanDateTime = (raw: string) => {
+  const d = wallClock(raw);
+  const y = d.getUTCFullYear();
+  const mo = String(d.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(d.getUTCDate()).padStart(2, '0');
+  const h = String(d.getUTCHours()).padStart(2, '0');
+  const mi = String(d.getUTCMinutes()).padStart(2, '0');
+  const s = String(d.getUTCSeconds()).padStart(2, '0');
+  return `${y}년 ${mo}월 ${day}일 ${h}:${mi}:${s}`;
+};
+
 // 절대시각 정렬용 (최신순 비교)
 export const toEpoch = (raw: string) => new Date(raw).valueOf();

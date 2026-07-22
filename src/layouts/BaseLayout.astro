@@ -155,6 +155,17 @@ const twitterCard = ogImageProp ? 'summary_large_image' : 'summary';
         }
       });
 
+      // 날짜 클릭 → 상세 시각(시:분:초) 토글. (마우스 올리면 title 툴팁으로도 보임)
+      document.addEventListener('click', (e) => {
+        const t = e.target;
+        if (!(t instanceof Element)) return;
+        const time = t.closest('.post-single__date-time');
+        if (!time) return;
+        const detailed = time.classList.toggle('is-detailed');
+        const next = detailed ? time.getAttribute('data-detail') : time.getAttribute('data-short');
+        if (next) time.textContent = next;
+      });
+
       // 읽어주기(TTS): 글 본문에서 문장을 선택하면 뜨는 버튼으로 음성 재생.
       // 언어는 글자 종류로 자동 추정(일/한/중/프/영). 목소리는 사용자 기기에 설치된 것에 따름.
       if ('speechSynthesis' in window) {

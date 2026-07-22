@@ -2,7 +2,7 @@
 import { render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { postPath, authorPath, tagPath } from '../../lib/path';
-import { koreanDate } from '../../lib/date';
+import { koreanDate, koreanDateTime } from '../../lib/date';
 import { authorName } from '../../config/site';
 import { getPublishedPosts } from '../../lib/content';
 import Giscus from '../../components/Giscus.astro';
@@ -88,7 +88,12 @@ const readingMinutes = Math.max(1, Math.round(charCount / 500));
     <div class="post-single__footer">
       <p class="post-single__footer-text">
         <em class="post-single__date">
-          {koreanDate(date)}에&nbsp;
+          <time
+            class="post-single__date-time"
+            datetime={date}
+            title={koreanDateTime(date)}
+            data-short={koreanDate(date)}
+            data-detail={koreanDateTime(date)}>{koreanDate(date)}</time>에&nbsp;
           <a href={authorPath(author)}><strong>{authorName(author)}</strong></a>가 씀.
         </em>
       </p>
@@ -146,6 +151,13 @@ const readingMinutes = Math.max(1, Math.round(charCount / 500));
     font-size: $typographic-small-font-size;
     @include margin-top(0);
     @include margin-bottom(0.5);
+  }
+
+  // 날짜: 마우스 올리면(툴팁) 또는 누르면 상세 시각이 보인다는 힌트로 점선 밑줄
+  .post-single__date-time {
+    cursor: pointer;
+    border-bottom: 1px dotted $color-gray;
+    font-style: inherit;
   }
 
   .post-nav {
