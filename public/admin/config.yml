@@ -88,6 +88,21 @@ collections:
           default: true, # 새 글은 기본적으로 초안 상태로 시작(실수 발행 방지)
         }
       - {
+          name: series,
+          label: 연재 이름,
+          widget: string,
+          required: false,
+          hint: '여러 편을 묶고 싶을 때만. 같은 이름끼리 묶여 순서대로 표시됩니다.',
+        }
+      - {
+          name: seriesOrder,
+          label: 연재 순서(숫자),
+          widget: number,
+          required: false,
+          value_type: int,
+          hint: '연재 안에서의 순서. 1, 2, 3 … (비우면 게시일 순)',
+        }
+      - {
           name: body,
           label: 본문,
           widget: markdown,

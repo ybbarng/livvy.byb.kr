@@ -9,6 +9,7 @@ import Giscus from '../../components/Giscus.astro';
 import DisqusArchive from '../../components/DisqusArchive.astro';
 import TableOfContents from '../../components/TableOfContents.astro';
 import RelatedPosts from '../../components/RelatedPosts.astro';
+import SeriesNav from '../../components/SeriesNav.astro';
 
 export async function getStaticPaths() {
   const posts = await getPublishedPosts(); // 최신순 정렬
@@ -26,6 +27,18 @@ export async function getStaticPaths() {
       .sort((a, b) => b.score - a.score)
       .slice(0, 3)
       .map((x) => x.post);
+    // 같은 연재(series)의 글을 순서(seriesOrder→날짜 오름차순)대로 모은다.
+    const seriesPosts = post.data.series
+      ? posts
+          .filter((p) => p.data.series === post.data.series)
+          .sort(
+            (a, b) =>
+              (a.data.seriesOrder ?? Number.MAX_SAFE_INTEGER) -
+                (b.data.seriesOrder ?? Number.MAX_SAFE_INTEGER) ||
+              new Date(a.data.date).getTime() - new Date(b.data.date).getTime(),
+          )
+          .map((p) => ({ slug: p.data.slug, title: p.data.title }))
+      : [];
     return {
       params: { slug: post.data.slug },
       props: {
@@ -33,12 +46,13 @@ export async function getStaticPaths() {
         newer: posts[i - 1] ?? null, // 더 최근에 쓴 글(다음 글)
         older: posts[i + 1] ?? null, // 더 예전에 쓴 글(이전 글)
         related,
+        seriesPosts,
       },
     };
   });
 }
 
-const { post, newer, older, related } = Astro.props;
+const { post, newer, older, related, seriesPosts } = Astro.props;
 const { Content, headings } = await render(post);
 const { title, date, author, tags, description } = post.data;
 
@@ -57,6 +71,15 @@ const readingMinutes = Math.max(1, Math.round(charCount / 500));
     <div class="post-single__inner">
       <h1 class="post-single__title" data-pagefind-meta="title">{title}</h1>
       <p class="post-single__readtime">약 {readingMinutes}분 읽기</p>
+      {
+        post.data.series && (
+          <SeriesNav
+            name={post.data.series}
+            posts={seriesPosts}
+            currentSlug={post.data.slug}
+          />
+        )
+      }
       <TableOfContents headings={headings} />
       <div class="post-single__body" data-pagefind-body>
         <Content />

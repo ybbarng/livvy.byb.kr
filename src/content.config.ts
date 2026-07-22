@@ -18,6 +18,9 @@ const posts = defineCollection({
     tags: z.array(z.string()).default([]),
     description: z.string().optional(),
     draft: z.boolean().default(false),
+    // 연재(시리즈): 같은 series 이름의 글을 묶어 순서대로 보여준다.
+    series: z.string().optional(),
+    seriesOrder: z.number().optional(),
   }),
 });
 

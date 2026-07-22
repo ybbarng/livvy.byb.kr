@@ -1,0 +1,73 @@
+---
+// 연재(시리즈) 목록. 같은 series 의 글을 순서대로 보여주고 현재 글을 강조한다.
+import { postPath } from '../lib/path';
+
+interface Props {
+  name: string;
+  posts: { slug: string; title: string }[];
+  currentSlug: string;
+}
+const { name, posts, currentSlug } = Astro.props;
+---
+
+{
+  posts.length > 1 && (
+    <nav class="series" aria-label={`연재: ${name}`}>
+      <p class="series__label">📚 연재 · {name}</p>
+      <ol class="series__list">
+        {posts.map((p) => (
+          <li class:list={['series__item', { 'series__item--current': p.slug === currentSlug }]}>
+            {p.slug === currentSlug ? (
+              <span aria-current="true">{p.title}</span>
+            ) : (
+              <a href={postPath(p.slug)}>{p.title}</a>
+            )}
+          </li>
+        ))}
+      </ol>
+    </nav>
+  )
+}
+
+<style lang="scss">
+  @import '../styles/variables';
+
+  .series {
+    max-width: $layout-post-single-width;
+    margin: 0 auto 1.5rem;
+    padding: 0.7rem 1rem 0.8rem;
+    border: 1px solid $color-gray-border;
+    border-radius: 8px;
+    background: var(--c-surface);
+    font-size: $typographic-small-font-size;
+
+    &__label {
+      margin: 0 0 0.4rem;
+      font-weight: 600;
+      color: $color-base;
+    }
+
+    &__list {
+      list-style: decimal;
+      margin: 0;
+      padding-left: 1.4rem;
+    }
+
+    &__item {
+      margin: 0.15rem 0;
+      padding: 0;
+
+      a {
+        color: $color-gray;
+        &:hover {
+          color: $color-primary;
+        }
+      }
+    }
+
+    &__item--current span {
+      font-weight: 700;
+      color: $color-base;
+    }
+  }
+</style>
