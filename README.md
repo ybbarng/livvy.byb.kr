@@ -44,6 +44,12 @@
 - **[Expressive Code](https://expressive-code.com/)** — 코드 블록에 복사 버튼·파일명 탭, 라이트/다크 자동 전환
 - **후리가나·병음** — 마크다운 `{한자|읽기}` → `<ruby>` (일본어·중국어 공부용)
 - **가변 폰트** — Noto Sans KR/JP/SC + 라틴, Roboto. `unicode-range`로 언어별 자동 로딩, CJK는 `font-display:optional`로 로딩 중 밀림 방지
+- **본문 문법** — 콜아웃(`> [!NOTE]`)·각주·정답 가리기(`||…||`)·소제목 앵커, 링크만으로 유튜브·트위터·지도·CodePen/StackBlitz 임베드
+- **화면 전환·검색** — View Transitions로 부드러운 이동, [Pagefind](https://pagefind.app/) 정적 전문 검색
+- **글별 OG 이미지** — 빌드 시 제목 카드 생성(한/일/중/프 다국어), 연재(시리즈) 묶기, 접속 통계(Cloudflare Web Analytics)
+- **읽어주기(TTS)** — 문장을 선택하면 음성으로 읽어줌(언어 자동 감지)
+
+작성 문법은 모두 [`/guide/`](https://livvy.byb.kr/guide/)에 실제 렌더 예시와 함께 정리돼 있다.
 
 ## 🛠 개발
 

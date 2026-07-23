@@ -109,3 +109,25 @@
 
 - Sveltia는 **커스텀 블록** 컴포넌트(`registerEditorComponent`)는 지원하나 **인라인 커스텀(후리가나 버튼 등)은 미지원**. 그래서 후리가나는 타이핑(문법) + 가이드로 안내.
 - 더 확장성 좋은 Keystatic을 검토했으나 에디터가 **Slate.js** 기반이라 CJK/IME 입력 리스크(= Sveltia로 온 이유)가 있어 보류. 결론: **입력 안정성 > 커스텀 버튼** → Sveltia 유지.
+
+## 마크다운 파이프라인 (본문 기능)
+
+`astro.config.mjs`의 `markdown.remarkPlugins`/`rehypePlugins`로 본문 문법을 확장한다. 작성자용 사용법은 모두 `/guide/`(src/guide-content.md)에 **실제 렌더 예시와 함께** 있다.
+
+- `plugins/remark-ruby.mjs` — 후리가나·병음 `{한자|읽기}` → `<ruby>`
+- `plugins/remark-embed.mjs` — 한 줄 링크 → 임베드: 유튜브(nocookie facade, 클릭 재생)·트위터/X(widgets.js)·구글 지도(좌표 URL/`maps/embed?pb=`, API 키 불필요)·CodePen/StackBlitz. 문장 속 링크는 텍스트로 둠.
+- `plugins/remark-callout.mjs` — GitHub식 `> [!NOTE]`(참고/팁/중요/주의/경고). 색은 `_generic.scss`의 `--cl` 변수.
+- `plugins/remark-spoiler.mjs` — `||내용||` → 눌러야 보이는 가림(학습용).
+- `rehype-slug` + `rehype-autolink-headings` — 소제목 id + 앵커(#). 각주는 GFM 기본(`remarkRehype.footnoteLabel`로 한국어화, 목차에서 제외).
+- 임베드/스포일러/날짜상세/TTS의 **클릭 동작은 `BaseLayout.astro`의 이벤트 위임 스크립트**가 담당(View Transitions로 페이지가 바뀌어도 재부착 불필요).
+- 목록 요약: description 없으면 `lib/excerpt.ts`가 본문 앞부분을 잘라 미리보기 생성. 굵게만 있는 문단(`p:has(>strong:only-child)`)은 소제목처럼 아래 여백을 좁힘.
+
+## 화면 전환·검색·OG·통계 (리더 경험 · 빌드 후 처리)
+
+- **View Transitions**: `astro:transitions`의 `<ClientRouter />`. 전환 후 테마 유지(`astro:after-swap`), 애니메이션은 `prefers-reduced-motion` 존중.
+- **검색(Pagefind)**: `build` 스크립트가 `astro build` 뒤 `pagefind --site dist`로 색인. 글 본문에 `data-pagefind-body` 표시(글만 색인). `/search/`(noindex) + 메뉴 돋보기. dev에선 색인이 없어 동작 안 함(빌드/배포본 전용).
+- **OG 이미지**: `src/pages/og/[...route].ts`가 `astro-og-canvas`로 글마다 1200×630 카드 생성(빌드 중). 다국어 위해 `src/assets/og-fonts/`에 Noto Sans 4종 **TTF 커밋**(family명이 `Noto Sans KR Thin` 형태라 그대로 사용, 브라우저 미전송). `canvaskit-wasm`은 pnpm에서 직접 devDep으로 설치해야 함(`__dirname` 이슈).
+- **접속 통계**: Cloudflare Web Analytics beacon을 `BaseLayout`에 삽입(`spa:true`, 쿠키·개인정보 없음). CMS 로그인용 Cloudflare Worker `sveltia-cms-auth`와는 별개.
+- **연재(시리즈)**: 스키마의 `series`/`seriesOrder`(+CMS 필드). `SeriesNav.astro`가 같은 series 글을 순서대로 표시.
+
+> 완료된 기능 전체 목록과 보류·다음 후보는 [ROADMAP.md](ROADMAP.md) 참조.
