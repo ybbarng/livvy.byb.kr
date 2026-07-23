@@ -131,3 +131,9 @@
 - **연재(시리즈)**: 스키마의 `series`/`seriesOrder`(+CMS 필드). `SeriesNav.astro`가 같은 series 글을 순서대로 표시.
 
 > 완료된 기능 전체 목록과 보류·다음 후보는 [ROADMAP.md](ROADMAP.md) 참조.
+
+## 버전 제약 메모
+
+- **TypeScript는 6.x 까지만** (현재 `6.0.3`). 타입체크에 쓰는 **`@astrojs/check`의 peer가 `typescript: ^5 || ^6`** 이라 TS 7을 넣으면 `pnpm check`가 깨진다. `@astrojs/check`가 TS 7을 지원하면 올릴 것. 추적/판단: [ROADMAP.md](ROADMAP.md) "보류·대안 채택" 참조.
+- 나머지(astro·sass·GitHub Actions 등)는 최신. GitHub Actions는 major 태그로 고정(`@v7` 등) — patch는 자동, major 업은 Dependabot이 PR로 제안.
+- 원칙: 버전은 **가능한 한 최신**. 단, 위처럼 도구 호환성으로 막히면 그 이유를 여기+ROADMAP에 적어 추적 가능하게 둔다.

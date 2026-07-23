@@ -59,6 +59,8 @@
 
 - **Twoslash(TS 타입 힌트)**: `@expressive-code/plugin-twoslash`가 npm에서 404로 설치 불가 → 보류. (레지스트리 복구되면 재시도)
 - **Sandpack(글 안 인라인 실행)**: React 의존이 커서 정적 사이트에 부담 → 대신 CodePen·StackBlitz **임베드**로 실행 코드 욕구를 대체.
+- **TypeScript 7 업그레이드 — 보류(차단됨).** 현재 **6.0.3**(올릴 수 있는 최대). TS 7.x가 나와 있지만 **`@astrojs/check`(우리 `pnpm check`가 쓰는 타입체커)의 peer 요구가 `typescript: ^5 || ^6`** 이라 7을 넣으면 타입체크가 깨진다. `@astrojs/check`(현재 최신 0.9.9)가 **TS 7을 지원하는 버전을 내면** 그때 typescript를 7로 올린다.
+  - **추적 방법**: `npm view @astrojs/check peerDependencies.typescript` 결과에 `^7`이 들어오면 업그레이드 가능. 또는 `pnpm add -D typescript@7 && pnpm check` 로 통과하는지 확인.
 
 ## 열린 결정 (정하면 진행)
 
