@@ -34,7 +34,36 @@ const viewports = [
   ['mobile', 375, 812],
 ];
 
-const browser = await chromium.launch();
+// Playwright 번들 Chromium(145~155)은 보안 취약점이 있어 받지 않는다(2026-11-04 보안 공지).
+// 패치된 시스템 Chrome만 샌드박스를 켜서 띄운다. 실행이 실패해도 샌드박스를 끄거나
+// 번들 Chromium으로 바꿔 띄우지 않는다.
+const BROWSER = { channel: 'chrome', chromiumSandbox: true };
+// 취약점이 고쳐진 가장 낮은 Chrome 버전. 이보다 낮으면 페이지를 열지 않는다
+const MIN_CHROME = '156.0.8078.73';
+
+// 점으로 나눈 버전 비교: a가 b보다 낮으면 음수
+function compareVersion(a, b) {
+  const pa = a.split('.').map(Number);
+  const pb = b.split('.').map(Number);
+  for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+    const d = (pa[i] ?? 0) - (pb[i] ?? 0);
+    if (d !== 0) return d;
+  }
+  return 0;
+}
+
+const browser = await chromium.launch(BROWSER);
+const version = browser.version();
+console.log(`브라우저: Chrome ${version} (${BROWSER.channel})`);
+if (compareVersion(version, MIN_CHROME) < 0) {
+  await browser.close();
+  throw new Error(`Chrome ${version}은 보안 수정 전 버전이다. ${MIN_CHROME} 이상으로 올려야 한다`);
+}
+if (process.env.CAPTURE_CHECK_BROWSER_ONLY) {
+  // 브라우저 설정만 확인하고 페이지는 열지 않는다
+  await browser.close();
+  process.exit(0);
+}
 await mkdir(outDir, { recursive: true });
 
 for (const [vName, width, height] of viewports) {
